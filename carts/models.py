@@ -22,5 +22,3 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product
     
-    def save(self, *args, **kwargs):
-        super(CartItem, self).save(*args, **kwargs) 
