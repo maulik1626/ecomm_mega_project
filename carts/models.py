@@ -6,6 +6,12 @@ class Cart(models.Model):
     cart_id = models.CharField(max_length=250, blank=True)
     date_added = models.DateField(auto_now_add=True)
     
+    class Meta:
+        db_table = "Cart"
+        ordering = ["date_added"]
+        verbose_name = "Cart"
+        verbose_name_plural = "Carts"
+    
     def __str__(self):
         return self.cart_id
 
@@ -15,6 +21,12 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        db_table = "CartItem"
+        verbose_name = "Cart Item"
+        verbose_name_plural = "Cart Items"
+        
     
     def sub_total(self):
         return self.product.price * self.quantity
