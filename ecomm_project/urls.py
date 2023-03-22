@@ -26,6 +26,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("store/", include("store.urls")),
     path("cart/", include("carts.urls")),
+    path("wishlist/", include("wishlists.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # STEP 51: create and go to store/urls.py and add the url for the store page

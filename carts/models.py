@@ -3,6 +3,7 @@ from store.models import Product
 
 # Create your models here.
 class Cart(models.Model):
+    """This model is used to store the cart id and the date when the cart is created."""
     cart_id = models.CharField(max_length=250, blank=True)
     date_added = models.DateField(auto_now_add=True)
     
@@ -17,6 +18,7 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
+    """This model is used to store the product, cart, quantity and the status of the cart item."""
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     quantity = models.IntegerField()
