@@ -22,6 +22,15 @@
 </section>
 <!-- Breadcrumb Section End -->
 
+{% if cart_empty_msg %}
+
+<center>
+    <h1 style="margin-top: 100px; margin-bottom: 70px;">{{cart_empty_msg}}</h1>
+    <a href="{% url 'store' %}" class="btn btn-primary" style="margin-top: 20px; background-color: antiquewhite; border-color: antiquewhite; color: black; font-weight: 400;">Continue Shopping 👕 👖 👟 </a>
+    <br><br><br><br><br><br><br><br><br><br>
+</center>
+
+{% else %}
 <!-- Shopping Cart Section Begin -->
 <section class="shopping-cart spad">
     <div class="container">
@@ -192,5 +201,7 @@
 </section>
 <!-- Shopping Cart Section End -->
 
+
+{% endif %}
 
 {% endblock content %}

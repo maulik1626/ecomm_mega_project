@@ -56,9 +56,9 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     
     if cart_items.count() == 0:
-        empty_cart = True
-        empty_cart_message = "Your cart is empty. Please add some items to it."
-        context["empty_cart_message"] = empty_cart_message
+        cart_empty_msg = "Your cart is empty."
+        context["cart_empty_msg"] = cart_empty_msg
+        
     
     return render(request, "carts/cart.html", context=context) 
 
