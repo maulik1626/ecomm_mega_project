@@ -3,62 +3,77 @@
 {% block content %}
 
 
-    <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shopping Cart</h4>
-                        <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <a href="./shop.html">Store</a>
-                            <span>Shopping Cart</span>
-                        </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Store</a>
+                        <span>Shopping Cart</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Breadcrumb Section End -->
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="shopping__cart__table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="{% static 'img/shopping-cart/cart-1.jpg' %}" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th style="padding-left: 30px;">Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cart_item in cart_items %}
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img src="{{cart_item.product.images.url}}" alt="" width="100px">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6 style="margin-bottom: 5px;">{{cart_item.product.product_name}}</h6>
+                                        <p style="margin: 0px 0px 0px 0px;">Color : </p>
+                                        <p style="margin: 0px 0px 10px 0px;">Size : </p>
+                                        <h5>Rs. {{cart_item.product.price}}</h5>
+                                    </div>
+                                </td>
+                                <td class="quantity__item">
+                                    <div class="col">
+                                        <div class="input-group input-spinner">
+                                            <div class="input-group-prepend">
+                                                <a href="{% url 'reduce_from_cart' cart_item.product.id %}"
+                                                    class="btn btn-light" style="border-color: lightgray; border-right: 0;"> <i class="fa fa-minus"></i> </a>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{cart_item.quantity}}"
+                                                readonly style="width: 0px; text-align: center; border-color: lightgray; border-left: 0; border-right: 0">
+                                            <div class="input-group-append">
+                                                <a href="{% url 'add_to_cart' cart_item.product.id %}"
+                                                    class="btn btn-light" style="border-color: lightgray; border-left: 0"> <i class="fa fa-plus"></i> </a>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <!-- <tr>
+                                    </div>
+                                </td>
+                                <td class="cart__price">Rs. {{cart_item.sub_total}}</td>
+                                <td class="cart__close">
+                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i class="fa fa-close"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <!-- <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
                                             <img src="{% static 'img/shopping-cart/cart-1.jpg' %}" alt="">
@@ -138,43 +153,44 @@
                                     <td class="cart__price">$ 30.00</td>
                                     <td class="cart__close"><i class="fa fa-close"></i></td>
                                 </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="#">Continue Shopping</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
-                            </div>
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-lg-4">
-                    <div class="cart__discount">
-                        <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Coupon code">
-                            <button type="submit">Apply</button>
-                        </form>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="{% url 'store' %}">Continue Shopping</a>
+                        </div>
                     </div>
-                    <div class="cart__total">
-                        <h6>Cart total</h6>
-                        <ul>
-                            <li>Subtotal <span>$ 169.50</span></li>
-                            <li>Total <span>$ 169.50</span></li>
-                        </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn update__btn">
+                            <a href="{% url 'cart' %}"><i class="fa fa-spinner"></i> Update cart</a>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Discount codes</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Coupon code">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Subtotal <span>Rs. {{total}}</span></li>
+                        <li>Tax <span>Rs. {{tax}}</span></li>
+                        <li>Total <span>Rs. {{grand_total}}</span></li>
+                    </ul>
+                    <a href="#" class="primary-btn">Proceed to checkout</a>
+                </div>
+            </div>
         </div>
-    </section>
-    <!-- Shopping Cart Section End -->
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
 
 
 {% endblock content %}

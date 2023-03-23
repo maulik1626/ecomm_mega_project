@@ -221,7 +221,7 @@
                                 {% if product.stock <= 0 %}
                                 <a href="#" class="add-cart">! Out of Stock</a>
                                 {% else %}
-                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
                                 {% endif %}
                                 <div class="rating">
                                     <i class="fa fa-star-o"></i>
