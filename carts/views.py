@@ -46,6 +46,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         grand_total = total + tax
     except ObjectDoesNotExist:
         pass
+    
     context = {
         "total": total,
         "quantity": quantity,
@@ -53,6 +54,12 @@ def cart(request, total=0, quantity=0, cart_items=None):
         "tax": tax,
         "grand_total": grand_total,
     }
+    
+    if cart_items.count() == 0:
+        empty_cart = True
+        empty_cart_message = "Your cart is empty. Please add some items to it."
+        context["empty_cart_message"] = empty_cart_message
+    
     return render(request, "carts/cart.html", context=context) 
 
 def reduce_from_cart(request, product_id):
