@@ -1,9 +1,9 @@
-{% extends 'base.html' %}   
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
 
-  <!-- Breadcrumb Section Begin -->
-  <section class="breadcrumb-option">
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -26,6 +26,23 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="shop__sidebar">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% elif message.tags == 'info' %}
+                                <div class="alert alert-info" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% elif message.tags == 'warning' %}
+                                <div class="alert alert-warning" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                     <div class="shop__sidebar__search">
                         <form action="#">
                             <input type="text" placeholder="Search...">
@@ -210,38 +227,41 @@
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
                                 <ul class="product__hover">
-                                    <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
-                                    <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt=""> <span>Compare</span></a>
+                                    {% if product.stock > 0 %}
+                                    <li><a href="{% url 'add_to_wishlist' product.id %}"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                    {% endif %}
+                                    <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
+                                            <span>Compare</span></a>
                                     </li>
-                                    <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                                    <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
+                                                alt=""></a></li>
                                 </ul>
                             </div>
                             <div class="product__item__text">
                                 <h6>{{product.product_name}}</h6>
-                                {% if product.stock <= 0 %}
-                                <a href="#" class="add-cart">! Out of Stock</a>
-                                {% else %}
-                                <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
-                                {% endif %}
-                                <div class="rating">
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                </div>
-                                <h5>Rs. {{product.price}}</h5>
-                                <div class="product__color__select">
-                                    <label for="pc-4">
-                                        <input type="radio" id="pc-4">
-                                    </label>
-                                    <label class="active black" for="pc-5">
-                                        <input type="radio" id="pc-5">
-                                    </label>
-                                    <label class="grey" for="pc-6">
-                                        <input type="radio" id="pc-6">
-                                    </label>
-                                </div>
+                                {% if product.stock <= 0 %} <a href="#" class="add-cart">! Out of Stock</a>
+                                    {% else %}
+                                    <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                                    {% endif %}
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    <h5>Rs. {{product.price}}</h5>
+                                    <div class="product__color__select">
+                                        <label for="pc-4">
+                                            <input type="radio" id="pc-4">
+                                        </label>
+                                        <label class="active black" for="pc-5">
+                                            <input type="radio" id="pc-5">
+                                        </label>
+                                        <label class="grey" for="pc-6">
+                                            <input type="radio" id="pc-6">
+                                        </label>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -691,4 +711,6 @@
 
 {% endblock content %}
 
-<center><h2>Store Page</h2></center>
+<center>
+    <h2>Store Page</h2>
+</center>

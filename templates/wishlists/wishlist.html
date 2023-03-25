@@ -3,62 +3,82 @@
 {% block content %}
 
 
-    <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Wishlist</h4>
-                        <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <a href="./shop.html">Store</a>
-                            <span>Wishlist</span>
-                        </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Wishlist</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Store</a>
+                        <span>Wishlist</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Breadcrumb Section End -->
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-    <!-- Wishlist Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="shopping__cart__table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="{% static 'img/shopping-cart/cart-1.jpg' %}" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <!-- <tr>
+<!-- Wishlist Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.tags == 'success' %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'warning' %}
+                <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'info' %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for wishlist_item in wishlist_items %}
+                            <tr>
+                                <td class="product__cart__item">
+                                    <div class="product__cart__item__pic">
+                                        <img src="{{wishlist_item.product.images.url}}" alt="" width="100px">
+                                    </div>
+                                    <div class="product__cart__item__text">
+                                        <h6>{{wishlist_item.product.product_name}}</h6>
+                                        <p style="margin: 0px 0px 0px 0px;">Color : </p>
+                                        <p style="margin: 0px 0px 10px 0px;">Size : </p>
+                                    </div>
+                                </td>
+                                <td class="cart__price">Rs. {{wishlist_item.product.price}}</td>
+                                <td class="cart__close"><a href="{% url 'add_to_cart' wishlist_item.product.id %}"><i
+                                            class="fa fa-shopping-cart"
+                                            style="margin-left: 80px; margin-right: 40px; background-color: antiquewhite; color: brown;"></i></a>
+                                </td>
+                                <td class="cart__close"><a
+                                        href="{% url 'remove_from_wishlist' wishlist_item.product.id %}"><i
+                                            class="fa fa-close" style="margin-left: 0; margin-right: 0;"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                            <!-- <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
                                             <img src="{% static 'img/shopping-cart/cart-1.jpg' %}" alt="">
@@ -138,23 +158,24 @@
                                     <td class="cart__price">$ 30.00</td>
                                     <td class="cart__close"><i class="fa fa-close"></i></td>
                                 </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="#">Continue Shopping</a>
-                            </div>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="#">Continue Shopping</a>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="#"><i class="fa fa-spinner"></i> Update Wishlist</a>
-                            </div>
-                        </div> 
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn update__btn">
+                            <a href="#"><i class="fa fa-spinner"></i> Update Wishlist</a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+
+            </div>
+            <!-- <div class="col-lg-4">
                     <div class="cart__total">
                         <h6>Wishlist total</h6>
                         <ul>
@@ -165,11 +186,11 @@
                         <br>
                         <a href="#" class="primary-btn" style="background-color: grey;">Buy Now</a>
                     </div>
-                </div>
-            </div>
+                </div> -->
         </div>
-    </section>
-    <!-- Wishlist Section End -->
+    </div>
+</section>
+<!-- Wishlist Section End -->
 
 
 {% endblock content %}

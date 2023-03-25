@@ -124,7 +124,9 @@
                     <div class="product__item__pic set-bg" data-setbg="{{product.images.url}}">
                         <!-- <span class="label">New</span> -->
                         <ul class="product__hover">
-                            <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                            {% if product.stock > 0 %}
+                            <li><a href="{% url 'add_to_wishlist' product.id %}"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                            {% endif %}
                             <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
                                     <span>Compare</span></a></li>
                             <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}" alt=""></a></li>

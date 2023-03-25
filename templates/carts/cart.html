@@ -22,15 +22,27 @@
 </section>
 <!-- Breadcrumb Section End -->
 
-{% if cart_empty_msg %}
 
-<center>
-    <h1 style="margin-top: 100px; margin-bottom: 70px;">{{cart_empty_msg}}</h1>
-    <a href="{% url 'store' %}" class="btn btn-primary" style="margin-top: 20px; background-color: antiquewhite; border-color: antiquewhite; color: black; font-weight: 400;">Continue Shopping 👕 👖 👟 </a>
-    <br><br><br><br><br><br><br><br><br><br>
-</center>
 
-{% else %}
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'warning' %}
+        <div class="alert alert-warning" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'info' %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+     
 <!-- Shopping Cart Section Begin -->
 <section class="shopping-cart spad">
     <div class="container">
@@ -65,20 +77,26 @@
                                         <div class="input-group input-spinner">
                                             <div class="input-group-prepend">
                                                 <a href="{% url 'reduce_from_cart' cart_item.product.id %}"
-                                                    class="btn btn-light" style="border-color: lightgray; border-right: 0;"> <i class="fa fa-minus"></i> </a>
+                                                    class="btn btn-light"
+                                                    style="border-color: lightgray; border-right: 0;"> <i
+                                                        class="fa fa-minus"></i> </a>
                                             </div>
                                             <input type="text" class="form-control" value="{{cart_item.quantity}}"
-                                                readonly style="width: 0px; text-align: center; border-color: lightgray; border-left: 0; border-right: 0">
+                                                readonly
+                                                style="width: 0px; text-align: center; border-color: lightgray; border-left: 0; border-right: 0">
                                             <div class="input-group-append">
                                                 <a href="{% url 'add_to_cart' cart_item.product.id %}"
-                                                    class="btn btn-light" style="border-color: lightgray; border-left: 0"> <i class="fa fa-plus"></i> </a>
+                                                    class="btn btn-light"
+                                                    style="border-color: lightgray; border-left: 0"> <i
+                                                        class="fa fa-plus"></i> </a>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="cart__price">Rs. {{cart_item.sub_total}}</td>
                                 <td class="cart__close">
-                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i class="fa fa-close"></i></a>
+                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i
+                                            class="fa fa-close"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -200,8 +218,5 @@
     </div>
 </section>
 <!-- Shopping Cart Section End -->
-
-
-{% endif %}
 
 {% endblock content %}

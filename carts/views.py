@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product
 from carts.models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages as msgs
 
 # Create your views here.
 
@@ -56,9 +57,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     
     if cart_items.count() == 0:
-        cart_empty_msg = "Your cart is empty."
-        context["cart_empty_msg"] = cart_empty_msg
-        
+        msgs.info(request, "Your cart is empty.")
     
     return render(request, "carts/cart.html", context=context) 
 
