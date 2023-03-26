@@ -4,6 +4,7 @@ from carts.models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages as msgs
 from store.views import store
+from wishlists.views import add_to_wishlist, wishlist as wishlist_view
 from wishlists.models import WishlistItem
 
 # Create your views here.
@@ -17,10 +18,6 @@ def _cart_id(request):
 def add_to_cart(request, product_id):
     """Add a quantity of the specified product to the cart."""
     product = Product.objects.get(id=product_id)
-    
-    wishlist_item = WishlistItem.objects.filter(product=product, wishlist__wishlist_id=_cart_id(request))
-    
-    wishlist_item.delete()
     
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
@@ -142,5 +139,22 @@ def delete_from_cart(request, product_id):
     cart.save()
     
     msgs.warning(request, "Product(s) removed from cart.")
+    
+    return redirect('cart')
+
+def cart_to_wishlist(request, product_id):
+    """Move the specified product from the cart to the wishlist."""
+    # removing from cart
+    delete_from_cart(request, product_id)
+    
+    # adding to wishlist
+    add_to_wishlist(request, product_id)
+    
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+    
+    if cart_items.count() == 0:
+        return redirect(wishlist_view)
+    
     
     return redirect('cart')

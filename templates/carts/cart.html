@@ -109,8 +109,11 @@
                                 </td>
                                 <td class="cart__price">Rs. {{cart_item.sub_total}}</td>
                                 <td class="cart__close">
-                                    <a href="{% url 'cart_to_wishlist' cart_item.product.id %}"><i style="margin-left: 20px; margin-right: 20px; background-color: antiquewhite; color: red;"
-                                            class="fa fa-heart-o"></i></a>
+                                    <a href="{% url 'cart_to_wishlist' cart_item.product.id %}">
+                                        <i class="fa fa-heart-o"
+                                        style="margin-left: 20px; margin-right: 20px; background-color: antiquewhite; color: brown">
+                                        </i>
+                                    </a>
                                 </td>
                                 <td class="cart__close">
                                     <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i

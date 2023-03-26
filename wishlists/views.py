@@ -3,10 +3,8 @@ from django.contrib import messages as msgs
 from wishlists.models import Wishlist, WishlistItem
 from django.core.exceptions import ObjectDoesNotExist
 from store.models import Product
-from store.views import store
-from carts.views import remove_from_cart
-from carts.views import cart as cart_page
-from carts.models import CartItem, Cart
+from store.views import store as store_view
+# from carts.views import add_to_cart, cart as cart_view
 
 # Create your views here.
 
@@ -36,20 +34,6 @@ def wishlist(request, wishlist_items=None):
         
     return render(request, "wishlists/wishlist.html", context=context)
 
-def cart_to_wishlist(request, product_id):
-    
-    print(f"\n\n\nproduct_id: {product_id}\n\n\n")
-    
-    product = Product.objects.get(id=product_id)
-
-    add_to_wishlist(request, product_id)
-    remove_from_cart(request, product_id)
-    
-    
-    return redirect(cart_page)
-        
-    
-
 def add_to_wishlist(request, product_id):
     product = Product.objects.get(id=product_id)
     try:
@@ -63,7 +47,6 @@ def add_to_wishlist(request, product_id):
     try:
         wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist)
         msgs.info(request, "Product already in wishlist.")
-        item_in_wishlist = True
     except WishlistItem.DoesNotExist:
         wishlist_item = WishlistItem.objects.create(
             product=product,
@@ -73,7 +56,7 @@ def add_to_wishlist(request, product_id):
         msgs.success(request, "Product added to wishlist.")
     
     wishlist_item.save()
-    return redirect(store)
+    return redirect(store_view)
 
 def remove_from_wishlist(request, product_id):
     wishlist = Wishlist.objects.get(wishlist_id = _wishlist_id(request))
@@ -83,3 +66,19 @@ def remove_from_wishlist(request, product_id):
     wishlist.save()
     msgs.warning(request, "Product removed from wishlist.")
     return redirect("wishlist")
+
+# TODO: Implement wishlist to cart
+# def wishlist_to_cart(request, product_id):
+#     """Move a product from the wishlist to the cart."""
+#     # removing from wishlist
+#     remove_from_wishlist(request, product_id)
+#     # adding to cart
+#     add_to_cart(request, product_id)
+
+#     wishlist = Wishlist.objects.get(wishlist_id = _wishlist_id(request))
+#     wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)
+
+#     if wishlist_items.count() == 0:
+#         return redirect(cart_view)
+    
+#     return redirect('wishlist')
