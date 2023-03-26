@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from store.models import Product
 from category.models import Category
 from wishlists.models import Wishlist, WishlistItem
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
@@ -14,15 +15,25 @@ def store(request, category_slug=None):
     """This function is used to show the products in the store page. If the category slug is not None, then it will show the products of that category. If the category slug is None, then it will show all the products. It will also show the categories in the store page. It will also show the number of products in the store page."""
     categories = None
     products = None
+    items_per_page=3
     
     if category_slug != None:
         categories = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(category=categories, is_available=True)
+        products = Product.objects.filter(category=categories, is_available=True).order_by('id')
         product_count = products.count()
+        
+        paginator = Paginator(products, items_per_page)
+        page = request.GET.get('page')
+        page_items = paginator.get_page(page) 
     else:
-        products = Product.objects.all().filter(is_available=True)
+        products = Product.objects.all().filter(is_available=True).order_by('id')
         categories = Category.objects.all()
         product_count = products.count()
+        
+        
+        paginator = Paginator(products, items_per_page)
+        page = request.GET.get('page')
+        page_items = paginator.get_page(page) 
     
     wishlist = request.session.session_key
     if not wishlist:
@@ -33,7 +44,7 @@ def store(request, category_slug=None):
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
 
     context = {
-        "products": products,
+        "products": page_items,
         "categories": categories,
         "product_count": product_count,
         "title": "Store",
@@ -46,6 +57,9 @@ def store(request, category_slug=None):
 def product_detail(request, category_slug, product_slug):
     try:
         single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
+        # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
+        # TODO: if the product is in the wishlist, show the add to wishlist button as remove from wishlist button
+        # TODO: Display related products in the product detail page
     except Exception as e:
         raise e
     context = {
