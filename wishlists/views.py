@@ -4,6 +4,9 @@ from wishlists.models import Wishlist, WishlistItem
 from django.core.exceptions import ObjectDoesNotExist
 from store.models import Product
 from store.views import store
+from carts.views import remove_from_cart
+from carts.views import cart as cart_page
+from carts.models import CartItem, Cart
 
 # Create your views here.
 
@@ -27,9 +30,25 @@ def wishlist(request, wishlist_items=None):
         wishlist_empty_message = "Your wishlist is empty"
         context["wishlist_empty"] = True 
         context["wishlist_empty_message"] = wishlist_empty_message
+    
+    context["title"] = "Wishlist"
 
         
     return render(request, "wishlists/wishlist.html", context=context)
+
+def cart_to_wishlist(request, product_id):
+    
+    print(f"\n\n\nproduct_id: {product_id}\n\n\n")
+    
+    product = Product.objects.get(id=product_id)
+
+    add_to_wishlist(request, product_id)
+    remove_from_cart(request, product_id)
+    
+    
+    return redirect(cart_page)
+        
+    
 
 def add_to_wishlist(request, product_id):
     product = Product.objects.get(id=product_id)

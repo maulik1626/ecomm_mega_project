@@ -5,10 +5,11 @@
 {% load static %}
 <nav class="header__menu mobile-menu">
     <ul>
-        <li><a href="{% url 'home' %}">Home</a></li>
         <!-- add class="active" to highlight the current page-->
         <!-- TODO: Check ChatGPT on how to add the active status on current page in navbar in django -->
-        <li><a href="{% url 'store' %}">Shop</a></li>
+
+        <li {% if title == "Home" %} class="active" {% endif %}><a href="{% url 'home' %}">Home</a></li>
+        <li {% if title == "Store" %} class="active" {% endif %}><a href="{% url 'store' %}">Shop</a></li>
         <li><a href="#">Pages</a>
             <ul class="dropdown">
                 <li><a href="#">About Us</a></li>
@@ -19,6 +20,6 @@
             </ul>
         </li>
         <li><a href="#">Blog</a></li>
-        <li><a href="#">Contacts</a></li>
+        <li><a href="#"></a></li>
     </ul>
 </nav>

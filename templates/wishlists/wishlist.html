@@ -29,7 +29,8 @@
             <div class="cart__total__procced">
                 <center>
                     <h1 style="margin-top: 90px; margin-bottom: 60px;">{{wishlist_empty_message}}</h1>
-                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;" class="primary-btn">Continue Shopping</a>
+                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
+                        class="primary-btn">Continue Shopping</a>
                 </center>
             </div>
         </div>
@@ -83,7 +84,7 @@
                                     </div>
                                 </td>
                                 <td class="cart__price">Rs. {{wishlist_item.product.price}}</td>
-                                <td class="cart__close"><a href="{% url 'add_to_cart' wishlist_item.product.id %}"><i
+                                <td class="cart__close"><a href="{% url 'increase_in_cart' wishlist_item.product.id %}"><i
                                             class="fa fa-shopping-cart"
                                             style="margin-left: 80px; margin-right: 40px; background-color: antiquewhite; color: brown;"></i></a>
                                 </td>

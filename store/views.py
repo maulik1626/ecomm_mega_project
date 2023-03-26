@@ -21,11 +21,14 @@ def store(request, category_slug=None):
         products = Product.objects.all().filter(is_available=True)
         categories = Category.objects.all()
         product_count = products.count()
+    
+    
 
     context = {
         "products": products,
         "categories": categories,
         "product_count": product_count,
+        "title": "Store",
     }
     
     return render(request, "store/store.html", context=context)

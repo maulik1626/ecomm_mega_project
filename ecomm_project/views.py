@@ -22,6 +22,7 @@ def home(request):
     context = {
         "products": products[:7], 
         "categories": categories,
+        "title": "Home",
     }
     return render(request, "home.html", context=context)
 

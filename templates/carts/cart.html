@@ -22,26 +22,6 @@
 </section>
 <!-- Breadcrumb Section End -->
 
-
-
-{% if messages %}
-    {% for message in messages %}
-        {% if message.tags == 'success' %}
-        <div class="alert alert-success" role="alert">
-            {{ message }}
-        </div>
-        {% elif message.tags == 'warning' %}
-        <div class="alert alert-warning" role="alert">
-            {{ message }}
-        </div>
-        {% elif message.tags == 'info' %}
-        <div class="alert alert-info" role="alert">
-            {{ message }}
-        </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
 {% if cart_empty %}
 <div class="container">
     <div class="row">
@@ -49,7 +29,8 @@
             <div class="cart__total__procced">
                 <center>
                     <h1 style="margin-top: 90px; margin-bottom: 60px;">{{cart_empty_message}}</h1>
-                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;" class="primary-btn">Continue Shopping</a>
+                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
+                        class="primary-btn">Continue Shopping</a>
                 </center>
             </div>
         </div>
@@ -60,6 +41,25 @@
 <section class="shopping-cart spad">
     <div class="container">
         <div class="row">
+            <div class="col-lg-12">
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.tags == 'success' %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'warning' %}
+                <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'info' %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
                     <table>
@@ -68,6 +68,7 @@
                                 <th>Product</th>
                                 <th style="padding-left: 30px;">Quantity</th>
                                 <th>Total</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -98,7 +99,7 @@
                                                 readonly
                                                 style="width: 0px; text-align: center; border-color: lightgray; border-left: 0; border-right: 0">
                                             <div class="input-group-append">
-                                                <a href="{% url 'add_to_cart' cart_item.product.id %}"
+                                                <a href="{% url 'increase_in_cart' cart_item.product.id %}"
                                                     class="btn btn-light"
                                                     style="border-color: lightgray; border-left: 0"> <i
                                                         class="fa fa-plus"></i> </a>
@@ -107,6 +108,10 @@
                                     </div>
                                 </td>
                                 <td class="cart__price">Rs. {{cart_item.sub_total}}</td>
+                                <td class="cart__close">
+                                    <a href="{% url 'cart_to_wishlist' cart_item.product.id %}"><i style="margin-left: 20px; margin-right: 20px; background-color: antiquewhite; color: red;"
+                                            class="fa fa-heart-o"></i></a>
+                                </td>
                                 <td class="cart__close">
                                     <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i
                                             class="fa fa-close"></i></a>
