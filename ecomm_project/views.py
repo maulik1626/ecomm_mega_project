@@ -2,6 +2,8 @@ from django.shortcuts import render
 from random import shuffle
 from store.models import Product
 from category.models import Category
+from wishlists.models import Wishlist, WishlistItem
+
 
 # Create your views here.
 
@@ -19,10 +21,19 @@ def home(request):
     products = list(products)
     shuffle(products)
     
+    wishlist = request.session.session_key
+    if not wishlist:
+        wishlist = request.session.create()
+    
+    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+    wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
+    
     context = {
         "products": products[:7], 
         "categories": categories,
         "title": "Home",
+        "wishlist_items" : wishlist_items,
     }
     return render(request, "home.html", context=context)
 

@@ -119,13 +119,14 @@
         </div>
         <div class="row product__filter">
             {% for product in products %}
+            {% if product.product_name in wishlist_items %}
             <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.category}}">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="{{product.images.url}}">
                         <!-- <span class="label">New</span> -->
                         <ul class="product__hover">
                             {% if product.stock > 0 %}
-                            <li><a href="{% url 'add_to_wishlist' product.id %}"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                            <li><a href="{% url 'soft_remove_from_wishlist' product.id %}"><img src="{% static 'img/icon/heart-red.png' %}" alt=""></a></li>
                             {% endif %}
                             <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
                                     <span>Compare</span></a></li>
@@ -161,6 +162,50 @@
                     </div>
                 </div>
             </div>
+            {% else %}
+            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.category}}">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="{{product.images.url}}">
+                        <!-- <span class="label">New</span> -->
+                        <ul class="product__hover">
+                            {% if product.stock > 0 %}
+                            <li><a href="{% url 'soft_add_to_wishlist' product.id %}"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                            {% endif %}
+                            <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
+                                    <span>Compare</span></a></li>
+                            <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6>{{product.product_name}}</h6>
+                        {% if product.stock <= 0 %}
+                        <a href="#" class="add-cart">! Out of Stock</a>
+                        {% else %}
+                        <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                        {% endif %}
+                        <div class="rating">
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                        </div>
+                        <h5>Rs. {{product.price}}</h5>
+                        <div class="product__color__select">
+                            <label for="pc-1">
+                                <input type="radio" id="pc-1">
+                            </label>
+                            <label class="active black" for="pc-2">
+                                <input type="radio" id="pc-2">
+                            </label>
+                            <label class="grey" for="pc-3">
+                                <input type="radio" id="pc-3">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             {% endfor %}
             <!-- Showing only 7 products. -->
             <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix">

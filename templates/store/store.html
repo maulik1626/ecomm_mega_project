@@ -223,6 +223,50 @@
                 </div>
                 <div class="row">
                     {% for product in products %}
+                    {% if product.product_name in wishlist_items %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
+                                <ul class="product__hover">
+                                    {% if product.stock > 0 %}
+                                    <li><a href="{% url 'soft_remove_from_wishlist' product.id %}"><img src="{% static 'img/icon/heart-red.png' %}" alt=""></a></li>
+                                    {% endif %}
+                                    <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
+                                            <span>Compare</span></a>
+                                    </li>
+                                    <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
+                                                alt=""></a></li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>{{product.product_name}}</h6>
+                                {% if product.stock <= 0 %} <a href="#" class="add-cart">! Out of Stock</a>
+                                    {% else %}
+                                    <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                                    {% endif %}
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    <h5>Rs. {{product.price}}</h5>
+                                    <div class="product__color__select">
+                                        <label for="pc-4">
+                                            <input type="radio" id="pc-4">
+                                        </label>
+                                        <label class="active black" for="pc-5">
+                                            <input type="radio" id="pc-5">
+                                        </label>
+                                        <label class="grey" for="pc-6">
+                                            <input type="radio" id="pc-6">
+                                        </label>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
@@ -265,6 +309,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endfor %}
                     <!-- <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">

@@ -168,3 +168,5 @@ def cart_to_wishlist(request, product_id):
     
     
     return redirect('cart')
+
+# TODO: make a function that notifies the user that the product is out of stock but in the cart

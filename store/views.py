@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from store.models import Product
 from category.models import Category
+from wishlists.models import Wishlist, WishlistItem
+
 
 # Create your views here.
 
@@ -22,13 +24,20 @@ def store(request, category_slug=None):
         categories = Category.objects.all()
         product_count = products.count()
     
+    wishlist = request.session.session_key
+    if not wishlist:
+        wishlist = request.session.create()
     
+    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+    wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
 
     context = {
         "products": products,
         "categories": categories,
         "product_count": product_count,
         "title": "Store",
+        "wishlist_items" : wishlist_items,
     }
     
     return render(request, "store/store.html", context=context)
@@ -43,3 +52,5 @@ def product_detail(request, category_slug, product_slug):
         "single_product" : single_product,
     }
     return render(request, "store/product_detail.html", context=context)
+
+#TODO: make a function that notify the user if the product is back in stock if the user has subscribed to the product's in stock notification
