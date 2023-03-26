@@ -116,8 +116,8 @@
                                     </a>
                                 </td>
                                 <td class="cart__close">
-                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}"><i
-                                            class="fa fa-close"></i></a>
+                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}">
+                                        <i class="fa fa-close"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
