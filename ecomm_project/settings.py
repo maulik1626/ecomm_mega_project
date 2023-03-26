@@ -72,7 +72,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 # STEP 58: add the context processor here
-                "category.context_processors.category_list"
+                "category.context_processors.category_list",
+                "wishlists.context_processors.wishlist_counter",
+                "carts.context_processors.cart_counter",
             ],
         },
     },

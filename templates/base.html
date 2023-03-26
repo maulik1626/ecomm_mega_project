@@ -106,14 +106,15 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt=""></a>
-                        <a href="{% url 'wishlist' %}">
+                        <a href="{% url 'wishlist' %}" style="color: black;">
                             {% if title == "Wishlist" %}
                             <img src="{% static 'img/icon/heart-red.png' %}" alt="">
                             {% else %}
                             <img src="{% static 'img/icon/heart.png' %}" alt="">
                             {% endif %}
+                            ({{wishlist_items_len}})                            
                         </a>
-                        <a href="{% url 'cart' %}"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span>0</span></a>
+                        <a href="{% url 'cart' %}"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span>{{cart_items_len}}</span></a>
                         <div class="price">$0.00</div>
                     </div>
                 </div>

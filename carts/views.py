@@ -38,10 +38,13 @@ def add_to_cart(request, product_id):
         )
     cart_item.save()
     
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    
     if cart_item.quantity > 1:
-        msgs.info(request, f"The quantity is updated to {cart_item.quantity}.")
+        msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
     else:
-        msgs.info(request, "The product added to cart.")
+        msgs.info(request, f" {product_name} is added to cart.")
     
     
     
@@ -73,10 +76,13 @@ def increase_in_cart(request, product_id):
         )
     cart_item.save()
     
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    
     if cart_item.quantity > 1:
-        msgs.info(request, f"The quantity is updated to {cart_item.quantity}.")
+        msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
     else:
-        msgs.info(request, "The product added to cart.")
+        msgs.info(request, f" {product_name} is added to cart.")
     
     
     
@@ -119,15 +125,16 @@ def reduce_from_cart(request, product_id):
     product = Product.objects.get(id=product_id)
     cart = Cart.objects.get(cart_id=_cart_id(request))
     cart_item = CartItem.objects.get(product=product, cart=cart)
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
+        msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
     else:
         cart_item.delete()
+        msgs.warning(request, f" {product_name} removed from cart.")
     cart.save()
-    
-    msgs.info(request, f"The quantity is updated to {cart_item.quantity}.")
-    
     return redirect('cart')
 
 def delete_from_cart(request, product_id):
@@ -138,7 +145,10 @@ def delete_from_cart(request, product_id):
     cart_item.delete()
     cart.save()
     
-    msgs.warning(request, "Product(s) removed from cart.")
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    
+    msgs.warning(request, f" {product_name} removed from cart.")
     
     return redirect('cart')
 

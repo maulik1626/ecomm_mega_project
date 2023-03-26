@@ -64,7 +64,7 @@ def remove_from_wishlist(request, product_id):
     wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist)
     wishlist_item.delete()
     wishlist.save()
-    msgs.warning(request, "Product removed from wishlist.")
+    msgs.warning(request, "Product(s) removed from wishlist.")
     return redirect("wishlist")
 
 # TODO: Implement wishlist to cart
