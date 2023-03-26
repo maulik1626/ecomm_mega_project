@@ -23,8 +23,11 @@ def wishlist(request, wishlist_items=None):
         "wishlist_items": wishlist_items,
     }
     
-    if wishlist_items.count == 0:
-        msgs.info(request, "Your wishlist is empty.")
+    if wishlist_items.count() == 0:
+        wishlist_empty_message = "Your wishlist is empty"
+        context["wishlist_empty"] = True 
+        context["wishlist_empty_message"] = wishlist_empty_message
+
         
     return render(request, "wishlists/wishlist.html", context=context)
 
