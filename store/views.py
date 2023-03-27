@@ -4,6 +4,7 @@ from category.models import Category
 from wishlists.models import Wishlist, WishlistItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from carts.models import Cart, CartItem
 
 # Create your views here.
 
@@ -55,15 +56,45 @@ def store(request, category_slug=None):
 
 # STEP 62: make a product_detail function to render the product_detail page and bring in all the product details to the product_detail page
 def product_detail(request, category_slug, product_slug):
+    cart_item = None
+    wishlist_item = None
     try:
         single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
         # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
+        
+        session_id = request.session.session_key
+        if not session_id:
+            session_id = request.session.create()
+        
+        try:
+            cart = Cart.objects.get(cart_id=session_id)
+        except Cart.DoesNotExist:
+            pass
+        
+        try:
+            cart_item = CartItem.objects.get(product=single_product, cart=cart)        
+        except CartItem.DoesNotExist:
+            pass
+        
+        try:
+            wishlist = Wishlist.objects.get(wishlist_id=session_id)
+        except Wishlist.DoesNotExist:
+            pass
+        
+        try:
+            wishlist_item = WishlistItem.objects.get(product=single_product, wishlist=wishlist)        
+        except WishlistItem.DoesNotExist:
+            pass
+
+        
         # TODO: if the product is in the wishlist, show the add to wishlist button as remove from wishlist button
         # TODO: Display related products in the product detail page
     except Exception as e:
         raise e
     context = {
         "single_product" : single_product,
+        "cart_item" : cart_item,
+        "wishlist_item" : wishlist_item,
     }
     return render(request, "store/product_detail.html", context=context)
 

@@ -204,8 +204,8 @@
                 {% if product_not_found %}
                 <center>
                     <h1 style="margin-top: 90px; margin-bottom: 60px;">Product not found</h1>
-                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
-                    class="primary-btn">Reset search / filter</a>
+                    <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;" class="primary-btn">Reset
+                        search / filter</a>
                 </center>
                 {% else %}
                 <div class="shop__product__option">
@@ -249,7 +249,7 @@
                                     <h6>{{product.product_name}} abc</h6>
                                     {% if product.stock <= 0 %} <a href="#" class="add-cart">! Out of Stock</a>
                                         {% else %}
-                                        <a href="{% url 'soft_add_to_cart' product.id %}" class="add-cart">+ Adddd To
+                                        <a href="{% url 'soft_add_to_cart' product.id %}" class="add-cart">+ Add To
                                             Cart</a>
                                         {% endif %}
                                         <div class="rating">

@@ -74,10 +74,10 @@
                             <tr>
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <img src="{{cart_item.product.images.url}}" alt="" width="100px">
+                                        <a href="{{cart_item.product.get_url}}"><img src="{{cart_item.product.images.url}}" alt="" width="100px"></a>
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h6 style="margin-bottom: 5px;">{{cart_item.product.product_name}}</h6>
+                                        <h6 style="margin-bottom: 5px;"><a href="{{cart_item.product.get_url}}" style="color: black;">{{cart_item.product.product_name}}</a></h6>
                                         <p style="margin: 0px 0px 0px 0px;">Color : </p>
                                         <p style="margin: 0px 0px 10px 0px;">Size : </p>
                                         <h5>Rs. {{cart_item.product.price}}</h5>

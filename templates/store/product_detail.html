@@ -99,64 +99,87 @@
                         <p><b>{{single_product.description}}</b> is a lorem ipsum dolor sit amet consectetur,
                             adipisicing elit. Magnam voluptatum repudiandae sequi? Doloribus quos sequi repellendus
                             error nobis optio, dolores quae itaque sunt sed labore?</p>
-                        <div class="product__details__option">
-                            <div class="product__details__option__size">
-                                <span>Size:</span>
-                                <label for="xxl">xxl
-                                    <input type="radio" id="xxl">
-                                </label>
-                                <label class="active" for="xl">xl
-                                    <input type="radio" id="xl">
-                                </label>
-                                <label for="l">l
-                                    <input type="radio" id="l">
-                                </label>
-                                <label for="sm">s
-                                    <input type="radio" id="sm">
-                                </label>
-                            </div>
-                            <div class="product__details__option__color">
-                                <span>Color:</span>
-                                <label class="c-1" for="sp-1">
-                                    <input type="radio" id="sp-1">
-                                </label>
-                                <label class="c-2" for="sp-2">
-                                    <input type="radio" id="sp-2">
-                                </label>
-                                <label class="c-3" for="sp-3">
-                                    <input type="radio" id="sp-3">
-                                </label>
-                                <label class="c-4" for="sp-4">
-                                    <input type="radio" id="sp-4">
-                                </label>
-                                <label class="c-9" for="sp-9">
-                                    <input type="radio" id="sp-9">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="product__details__cart__option">
-                            <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
-                                </div>
-                            </div>
-                            {% if single_product.stock <= 0 %}
-                            <a href="#" class="primary-btn" style="background-color:grey;">out of stock</a>
-                            <a href="{% url 'store' %}" class="primary-btn">visit store</a>
-                            {% else %}
-                            <a href="{% url 'add_to_cart' single_product.id %}" class="primary-btn">add to cart</a>
-                            <a href="{% url 'store' %}" class="primary-btn">visit store</a>
-                            {% endif %}
-                        </div>
-                        <div class="product__details__btns__option">
-                            {% if single_product.stock <= 0 %}
-                            <a href="#"><i class="fa fa-envelope-o"></i> Notify me</a>
-                            {% else %}
-                            <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                            <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
-                            {% endif %}
 
-                        </div>
+
+
+                        <form action="{% url 'soft_add_to_cart' single_product.id %}" method="get">
+                            <div class="product__details__option">
+                                <div class="product__details__option__size">
+                                    <span>Size:</span>
+                                    <label for="xxl">xxl
+                                        <input type="radio" id="xxl" name="size" value="xxl">
+                                    </label>
+                                    <label class="active" for="xl">xl
+                                        <input type="radio" id="xl" name="size" value="xl">
+                                    </label>
+                                    <label for="l">l
+                                        <input type="radio" id="l" name="size" value="l">
+                                    </label>
+                                    <label for="s">s
+                                        <input type="radio" id="s" name="size" value="s">
+                                    </label>
+                                </div>
+                                <div class="product__details__option__color">
+                                    <span>Color:</span>
+                                    <label class="c-1" for="sp-1">
+                                        <input type="radio" id="sp-1" name="color" value="black">
+                                    </label>
+                                    <label class="c-2" for="sp-2">
+                                        <input type="radio" id="sp-2" name="color" value="blue">
+                                    </label>
+                                    <label class="c-3" for="sp-3">
+                                        <input type="radio" id="sp-3" name="color" value="yellow">
+                                    </label>
+                                    <label class="c-4" for="sp-4">
+                                        <input type="radio" id="sp-4" name="color" value="red">
+                                    </label>
+                                    <label class="c-9" for="sp-9">
+                                        <input type="radio" id="sp-9" name="color" value="white">
+                                    </label>
+                                </div>
+
+
+                            </div>
+                            <div class="product__details__cart__option">
+                                {% if single_product.stock <= 0 %} 
+                                <a href="#" class="primary-btn" style="background-color:grey;">out of stock</a>
+                                <a href="{% url 'store' %}" class="primary-btn">visit store</a>
+                                {% else %}
+                                {% if cart_item %}
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" name="quantity" placeholder="Enter quantity" value="{{cart_item.quantity}}">
+                                    </div>
+                                </div>
+                                <button type="submit" class="primary-btn">add to
+                                    cart</button>
+                                {% else %}
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" name="quantity" placeholder="Enter quantity" value="1">
+                                    </div>
+                                </div>
+                                <button type="submit" class="primary-btn">add to
+                                    cart</button>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="product__details__btns__option">
+                                {% if single_product.stock <= 0 %} <a href="#"><i class="fa fa-envelope-o"></i> Notify
+                                    me</a>
+                                    {% else %}
+                                    {% if wishlist_item %}
+                                    <a href="{% url 'soft_remove_from_wishlist' single_product.id %}"><i class="fa fa-heart" style="color: red;"></i> remove from wishlist</a>
+                                    {% else %}
+                                    <a href="{% url 'soft_add_to_wishlist' single_product.id %}"><i class="fa fa-heart-o"></i> add to wishlist</a>
+                                    {% endif %}
+                                    <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                                    {% endif %}
+                            </div>
+                        </form>
+
+
+
                         <div class="product__details__last__option">
                             <h5><span>Guaranteed Safe Checkout</span></h5>
                             <img src="img/shop-details/details-payment.png" alt="">
