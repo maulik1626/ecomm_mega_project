@@ -50,6 +50,44 @@ def add_to_cart(request, product_id):
     
     return redirect(store)
 
+def soft_add_to_cart(request, product_id):
+    """Add a quantity of the specified product to the cart."""
+    product = Product.objects.get(id=product_id)
+    
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(
+            cart_id=_cart_id(request)
+        )
+    cart.save()
+    
+    try:
+        cart_item = CartItem.objects.get(product=product, cart=cart)        # check if the product is already in the cart using the product_id and cart_id 
+        cart_item.quantity += 1
+    except CartItem.DoesNotExist:
+        cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
+            product=product,                # and add the product to the cart
+            cart=cart,                      # and set the cart_id to the cart_id present in the session
+            quantity=1,                     # and set the quantity to 1
+        )
+    cart_item.save()
+    
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    
+    if cart_item.quantity > 1:
+        msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
+    else:
+        msgs.success(request, f" {product_name} is added to cart.")
+
+    previous_url = request.META.get('HTTP_REFERER')
+    request.session['previous_url'] = previous_url
+    
+    print(f"\n\n\nprevious_url: {previous_url}\n\n\n")
+    
+    return redirect(previous_url)
+
 def increase_in_cart(request, product_id):
     product = Product.objects.get(id=product_id)
     

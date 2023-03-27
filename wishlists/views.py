@@ -130,6 +130,10 @@ def soft_add_to_wishlist(request, product_id):
     
     wishlist_item.save()
     
+    product_name = wishlist_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    msgs.success(request, f" {product_name} is added to wishlist.")
+    
     # Store the previous URL in the session
     previous_url = request.META.get('HTTP_REFERER')
     request.session['previous_url'] = previous_url

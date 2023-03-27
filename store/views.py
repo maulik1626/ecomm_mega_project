@@ -3,7 +3,7 @@ from store.models import Product
 from category.models import Category
 from wishlists.models import Wishlist, WishlistItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.db.models import Q
 
 # Create your views here.
 
@@ -68,3 +68,43 @@ def product_detail(request, category_slug, product_slug):
     return render(request, "store/product_detail.html", context=context)
 
 #TODO: make a function that notify the user if the product is back in stock if the user has subscribed to the product's in stock notification
+
+def search(request):
+    context = {}
+    product_not_found = None
+    if 'keyword' in request.GET:
+        keyword = request.GET["keyword"]
+        if keyword:
+            products = Product.objects.order_by("-created_date").filter(
+                Q(description__icontains=keyword) | Q(product_name__icontains=keyword) | Q(category__category_name__icontains=keyword)
+            )
+            product_count = products.count()
+
+            if product_count < 1:
+                product_not_found = True
+                context["product_not_found"] = product_not_found
+            
+            no_keyword = True
+        else:
+            products = Product.objects.order_by('-created_date').filter(is_available=True)
+            no_keyword = False
+            product_count = products.count()
+        wishlist = request.session.session_key
+
+
+    wishlist = request.session.session_key
+    if not wishlist:
+        wishlist = request.session.create()
+    
+    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+    wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
+
+    
+    context["products"] = products
+    context["product_count"] = product_count
+    context["wishlist_items"] = wishlist_items
+    
+    print(context)
+    
+    return render(request, "store/store.html", context=context)
