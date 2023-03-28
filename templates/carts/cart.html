@@ -77,9 +77,10 @@
                                         <a href="{{cart_item.product.get_url}}"><img src="{{cart_item.product.images.url}}" alt="" width="100px"></a>
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h6 style="margin-bottom: 5px;"><a href="{{cart_item.product.get_url}}" style="color: black;">{{cart_item.product.product_name}}</a></h6>
-                                        <p style="margin: 0px 0px 0px 0px;">Color : </p>
-                                        <p style="margin: 0px 0px 10px 0px;">Size : </p>
+                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{cart_item.product.brand.name}}</a></h5>
+                                        <h6 style="padding-right: 10px; font-weight: 300;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{cart_item.product.product_name}}</a></h6>
+                                        <p style="margin: 0px 0px 0px 0px;">{{cart_item.product.color}}</p>
+                                        <p style="margin: 0px 0px 10px 0px;">{{cart_item.product.size.name}}</p>
                                         <h5>Rs. {{cart_item.product.price}}</h5>
                                     </div>
                                 </td>

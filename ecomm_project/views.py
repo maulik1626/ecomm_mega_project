@@ -25,9 +25,13 @@ def home(request):
     if not wishlist:
         wishlist = request.session.create()
     
-    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
-    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
-    wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
+    try:
+        wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+        wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+        wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
+    except Wishlist.DoesNotExist:
+        wishlist_items = []
+        
     
     context = {
         "products": products[:7], 

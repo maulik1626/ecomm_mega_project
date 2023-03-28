@@ -261,15 +261,11 @@
                                         </div>
                                         <h5>Rs. {{product.price}}</h5>
                                         <div class="product__color__select">
-                                            <label for="pc-4">
-                                                <input type="radio" id="pc-4">
+                                            {% for color in colors %}
+                                            <label for="pc-4" style="background: {{ color.color_hex }};">
+                                                <input type="radio" id="pc-4" name="{{ color.color_name }}" value="{{ color.color_name }}">
                                             </label>
-                                            <label class="active black" for="pc-5">
-                                                <input type="radio" id="pc-5">
-                                            </label>
-                                            <label class="grey" for="pc-6">
-                                                <input type="radio" id="pc-6">
-                                            </label>
+                                            {% endfor %}
                                         </div>
                                 </div>
                             </div>
@@ -306,15 +302,11 @@
                                         </div>
                                         <h5>Rs. {{product.price}}</h5>
                                         <div class="product__color__select">
-                                            <label for="pc-4">
-                                                <input type="radio" id="pc-4">
+                                            {% for color in colors %}
+                                            <label for="pc-4" style="background: {{ color.color_hex }};">
+                                                <input type="radio" id="pc-4" name="{{ color.color_name }}" value="{{ color.color_name }}">
                                             </label>
-                                            <label class="active black" for="pc-5">
-                                                <input type="radio" id="pc-5">
-                                            </label>
-                                            <label class="grey" for="pc-6">
-                                                <input type="radio" id="pc-6">
-                                            </label>
+                                            {% endfor %}
                                         </div>
                                 </div>
                             </div>

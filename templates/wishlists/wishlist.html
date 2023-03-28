@@ -73,12 +73,11 @@
                             <tr>
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <img src="{{wishlist_item.product.images.url}}" alt="" width="100px">
+                                        <a href="{{wishlist_item.product.get_url}}" style="color: black;"><img src="{{wishlist_item.product.images.url}}" alt="" width="100px"></a>
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h6>{{wishlist_item.product.product_name}}</h6>
-                                        <p style="margin: 0px 0px 0px 0px;">Color : </p>
-                                        <p style="margin: 0px 0px 10px 0px;">Size : </p>
+                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{wishlist_item.product.brand.name}}</a></h5>
+                                        <h6 style="padding-right: 10px; font-weight: 300;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{wishlist_item.product.product_name}}</a></h6>
                                     </div>
                                 </td>
                                 <td class="cart__price">Rs. {{wishlist_item.product.price}}</td>

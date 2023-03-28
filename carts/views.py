@@ -70,13 +70,25 @@ def soft_add_to_cart(request, product_id):
 
         try:
             cart_item = CartItem.objects.get(product=product, cart=cart)        # check if the product is already in the cart using the product_id and cart_id 
-            cart_item.quantity = int(request.GET["quantity"])
+            if int(request.GET["quantity"]) > 0:
+                cart_item.quantity = int(request.GET["quantity"])
+            elif int(request.GET["quantity"]) == 0:
+                cart_item.delete()
+                cart.save()
+                cart_item.save()
+            else:
+                pass
         except CartItem.DoesNotExist:
-            cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
-                product=product,                # and add the product to the cart
-                cart=cart,                      # and set the cart_id to the cart_id present in the session
-                quantity=int(request.GET["quantity"]),                     # and set the quantity to inpuut quantity
-            )
+            if int(request.GET["quantity"]) > 0:
+                cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
+                    product=product,                # and add the product to the cart
+                    cart=cart,                      # and set the cart_id to the cart_id present in the session
+                    quantity=int(request.GET["quantity"]),                     # and set the quantity to inpuut quantity
+                )
+            elif int(request.GET["quantity"]) == 0:
+                pass
+            else:
+                pass
         cart_item.save()
 
         product_name = cart_item.product.product_name

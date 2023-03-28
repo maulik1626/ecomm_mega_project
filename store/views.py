@@ -44,6 +44,11 @@ def store(request, category_slug=None):
     wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
 
+    colors = products.values('color__color_name', 'color__color_hex').order_by('-color__color_name').distinct()
+    
+    for color in colors:
+        print(f"\n\n\ncolors : {list(colors)}\n\n\n")
+    
     context = {
         "products": page_items,
         "categories": categories,
@@ -62,6 +67,16 @@ def product_detail(request, category_slug, product_slug):
         single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
         # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
         
+        sizes = single_product.size.values_list('name', flat=True).order_by('-name') # get the list of sizes
+        sizes = [int(size) for size in sizes if size != ''] # remove the empty string from the sizes list
+        sizes.sort() # sort the sizes list
+        sizes = [str(size) for size in sizes] # convert the sizes list to string
+        
+        colors = single_product.color.values('color_name', 'color_hex').order_by('-color_name')
+
+        tags = single_product.tags.values_list('name', flat=True).order_by('-name')
+
+        print(colors)
         session_id = request.session.session_key
         if not session_id:
             session_id = request.session.create()
@@ -95,6 +110,9 @@ def product_detail(request, category_slug, product_slug):
         "single_product" : single_product,
         "cart_item" : cart_item,
         "wishlist_item" : wishlist_item,
+        "sizes" : sizes,
+        "colors" : colors,
+        "tags" : tags,
     }
     return render(request, "store/product_detail.html", context=context)
 
