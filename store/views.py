@@ -82,7 +82,7 @@ def product_detail(request, category_slug, product_slug):
             pass
         
         try:
-            cart_item = CartItem.objects.get(product=single_product, cart=cart)        
+            cart_item = CartItem.objects.get(product=single_product, cart=cart, size=single_product.size)        
         except CartItem.DoesNotExist:
             pass
         

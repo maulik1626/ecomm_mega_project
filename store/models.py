@@ -103,7 +103,7 @@ class Variation(models.Model):
 class Product(Variation):
     """This class is used to create the product model"""
     product_name = models.CharField(max_length=200)
-    size = models.ManyToManyField(ProductSize, related_name='products', blank=True)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, null=True, blank=True)
     color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)
     sku = models.CharField(max_length=100, unique=True, editable=False, null=True, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -144,7 +144,7 @@ class Product(Variation):
             sku_parts = [self.brand.name[:3], self.category.category_name[:3], self.variation_category.name[:3]]
             product_name_slug = slugify(self.product_name)
             self.sku = f'{product_name_slug}-{self.pk}-{"-".join(sku_parts)}'
-            
+
         if self.discount > 0:
             self.discount_price = ceil(self.price - (self.price * (self.discount / 100)))
 

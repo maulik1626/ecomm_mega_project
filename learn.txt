@@ -1,0 +1,23 @@
+1. He used at 3.49 in video 56, in html file, 
+
+        {% for i in single_product.variation_set.all %}
+
+        learn what are those and more of such methods
+
+
+2. in the ORM query, he used __ at many places and also __icontaines 
+
+        learn what is __ between 2 model names and what is __icontaines and all related methods
+
+3. Learn how to make queries in ORM
+
+4. Learn how to make filters and all in jinja2 templeting language
+    He used at 4.45 in video 56, in html file, 
+
+        {{ i.variation_value | lower }}
+        {{ i.variation_value | capfirst }}
+
+        learn what are those and more of such methods
+
+
+5. learn how to make variation manager and models.Manager

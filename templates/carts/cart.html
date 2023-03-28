@@ -47,15 +47,15 @@
                 {% endif %}
             </div>
             {% if cart_empty %}
-                    <div class="col-lg-12">
-                        <div class="cart__total__procced">
-                            <center>
-                                <h1 style="margin-top: 90px; margin-bottom: 60px;">{{cart_empty_message}}</h1>
-                                <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
-                                    class="primary-btn">Continue Shopping</a>
-                            </center>
-                        </div>
-                    </div>
+            <div class="col-lg-12">
+                <div class="cart__total__procced">
+                    <center>
+                        <h1 style="margin-top: 90px; margin-bottom: 60px;">{{cart_empty_message}}</h1>
+                        <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
+                            class="primary-btn">Continue Shopping</a>
+                    </center>
+                </div>
+            </div>
             {% else %}
             <div class="col-lg-8">
                 <div class="shopping__cart__table">
@@ -74,13 +74,19 @@
                             <tr>
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <a href="{{cart_item.product.get_url}}"><img src="{{cart_item.product.images.url}}" alt="" width="100px"></a>
+                                        <a href="{{cart_item.product.get_url}}"><img
+                                                src="{{cart_item.product.images.url}}" alt="" width="100px"></a>
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{cart_item.product.brand.name}}</a></h5>
-                                        <h6 style="padding-right: 10px; font-weight: 300;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{cart_item.product.product_name}}</a></h6>
-                                        <p style="margin: 0px 0px 0px 0px;">{{cart_item.product.color}}</p>
-                                        <p style="margin: 0px 0px 10px 0px;">{{cart_item.product.size.name}}</p>
+                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}"
+                                                style="color: black;">{{cart_item.product.brand.name}}</a></h5>
+                                        <h6 style="padding-right: 10px; font-weight: 300;"><a
+                                                href="{{wishlist_item.product.get_url}}"
+                                                style="color: black;">{{cart_item.product.product_name}}</a></h6>
+                                        <p style="margin: 0px 0px 10px 0px;"><b>Color : </b> <span
+                                                style="font-style: italic;">{{cart_item.product.color}}</span></p>
+                                        <p style="margin: 0px 0px 10px 0px;"><b>Size : </b> <span
+                                                style="font-style: italic;">{{cart_item.size}}</span></p>
                                         <h5>Rs. {{cart_item.product.price}}</h5>
                                     </div>
                                 </td>
@@ -88,7 +94,7 @@
                                     <div class="col">
                                         <div class="input-group input-spinner">
                                             <div class="input-group-prepend">
-                                                <a href="{% url 'reduce_from_cart' cart_item.product.id %}"
+                                                <a href="{% url 'reduce_from_cart' product_id=cart_item.product.id size=cart_item.size %}"
                                                     class="btn btn-light"
                                                     style="border-color: lightgray; border-right: 0;"> <i
                                                         class="fa fa-minus"></i> </a>
@@ -97,7 +103,7 @@
                                                 readonly
                                                 style="width: 0px; text-align: center; border-color: lightgray; border-left: 0; border-right: 0">
                                             <div class="input-group-append">
-                                                <a href="{% url 'increase_in_cart' cart_item.product.id %}"
+                                                <a href="{% url 'increase_in_cart' product_id=cart_item.product.id size=cart_item.size %}"
                                                     class="btn btn-light"
                                                     style="border-color: lightgray; border-left: 0"> <i
                                                         class="fa fa-plus"></i> </a>
@@ -107,14 +113,14 @@
                                 </td>
                                 <td class="cart__price">Rs. {{cart_item.sub_total}}</td>
                                 <td class="cart__close">
-                                    <a href="{% url 'cart_to_wishlist' cart_item.product.id %}">
+                                    <a href="{% url 'cart_to_wishlist' product_id=cart_item.product.id size=cart_item.size %}">
                                         <i class="fa fa-heart-o"
                                             style="margin-left: 20px; margin-right: 20px; background-color: antiquewhite; color: brown">
                                         </i>
                                     </a>
                                 </td>
                                 <td class="cart__close">
-                                    <a href="{% url 'delete_from_cart' cart_item.product.id %}">
+                                    <a href="{% url 'delete_from_cart' product_id=cart_item.product.id size=cart_item.size %}">
                                         <i class="fa fa-close"></i></a>
                                 </td>
                             </tr>

@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['is_available', "stock", 'discount']
     list_display_links = ['brand', 'product_name']
 
-    filter_horizontal = ['tags', 'size']
+    filter_horizontal = ['tags']
     search_fields = ['product_name', 'description']
     fieldsets = (
         ('Product Information', {
@@ -48,20 +48,15 @@ class ProductAdmin(admin.ModelAdmin):
             return mark_safe(f'<div style="width: 50px; height: 20px; background-color: {obj.color.color_hex}"></div>')
         else:
             return '-'
-    
-    # def size_preview(self, obj):
-    #     if obj.size:
-    #         print(f"\n\n\n{obj}\n\n\n")
-    #         print(f"\n\n\n{obj.size}\n\n\n")
-    #         print(f"\n\n\n{obj.size.name}\n\n\n")
-    #     return '-'
-
-    
     color_preview.allow_tags = True
     color_preview.short_description = 'Color Preview'
-
-    # size_preview.allow_tags = True
-    # size_preview.short_description = 'Available Sizes'
+    
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj=obj, **kwargs)
+        form.product_variation_category_id = None
+        if obj:
+            form.product_variation_category_id = obj.variation_category_id
+        return form
 
 class ProductColorAdmin(admin.ModelAdmin):
     list_display = ('color_name', 'color_hex', 'color_preview')
@@ -75,9 +70,26 @@ class ProductColorAdmin(admin.ModelAdmin):
     color_preview.short_description = 'Color Preview'
 
 
+class ProductBrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+class ProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+class ProductTagsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+class ProductVariationCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+class ProductSizeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'product_variation_category')
+    list_filter = ('product_variation_category',)
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductColor, ProductColorAdmin)
-admin.site.register([ProductBrand, ProductType, ProductTags, ProductVariationCategory, ProductSize])
+admin.site.register(ProductBrand, ProductBrandAdmin)
+admin.site.register(ProductType, ProductTypeAdmin)
+admin.site.register(ProductTags, ProductTagsAdmin)
+admin.site.register(ProductVariationCategory, ProductVariationCategoryAdmin)
+admin.site.register(ProductSize, ProductSizeAdmin)
 
 
 
