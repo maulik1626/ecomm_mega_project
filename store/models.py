@@ -144,10 +144,11 @@ class Product(Variation):
             sku_parts = [self.brand.name[:3], self.category.category_name[:3], self.variation_category.name[:3]]
             product_name_slug = slugify(self.product_name)
             self.sku = f'{product_name_slug}-{self.pk}-{"-".join(sku_parts)}'
-        if not self.description:
-            self.description =  str(self.color.color_name) + ' ' + str(self.brand.name) + ' ' + str(self.product_name) + ' ' + str(self.category.category_name) + ' for men'
+            
         if self.discount > 0:
             self.discount_price = ceil(self.price - (self.price * (self.discount / 100)))
+
+        self.description =  str(self.color.color_name) + ' ' + str(self.brand.name) + ' ' + str(self.product_name) + ' ' + str(self.category.category_name) + ' for men'
         super().save(*args, **kwargs)
     
     def get_color_hex(self):

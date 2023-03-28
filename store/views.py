@@ -63,9 +63,12 @@ def product_detail(request, category_slug, product_slug):
         # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
         
         sizes = single_product.size.values_list('name', flat=True).order_by('-name') # get the list of sizes
-        sizes = [int(size) for size in sizes if size != ''] # remove the empty string from the sizes list
-        sizes.sort() # sort the sizes list
-        sizes = [str(size) for size in sizes] # convert the sizes list to string
+        try:
+            sizes = [int(size) for size in sizes if size != ''] # remove the empty string from the sizes list
+            sizes.sort() # sort the sizes list
+            sizes = [str(size) for size in sizes] # convert the sizes list to string
+        except:
+            sizes = [size for size in sizes if size != ''] # remove the empty string from the sizes list
         
         tags = single_product.tags.values_list('name', flat=True).order_by('-name')
 

@@ -138,7 +138,7 @@
                         {% if product.stock <= 0 %}
                         <a href="#" class="add-cart">! Out of Stock</a>
                         {% else %}
-                        <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                        <a href="{% url 'soft_remove_from_wishlist' product.id %}" class="add-cart">- Remove From Wishlist</a>
                         {% endif %}
                         <div class="rating">
                             <i class="fa fa-star-o"></i>
@@ -181,7 +181,8 @@
                         {% if product.stock <= 0 %}
                         <a href="#" class="add-cart">! Out of Stock</a>
                         {% else %}
-                        <a href="{% url 'add_to_cart' product.id %}" class="add-cart">+ Add To Cart</a>
+                        <a href="{% url 'soft_add_to_wishlist' product.id %}" class="add-cart">+ Add To
+                            Wishlist</a>
                         {% endif %}
                         <div class="rating">
                             <i class="fa fa-star-o"></i>

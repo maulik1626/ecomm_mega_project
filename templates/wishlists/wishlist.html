@@ -83,8 +83,8 @@
                                 <td class="cart__price">Rs. {{wishlist_item.product.price}}</td>
                                 <td class="cart__close">
 
-                                    <a href="{% url 'remove_from_wishlist' wishlist_item.product.id %}">
-                                        <i class="fa fa-shopping-cart"
+                                    <a href="{{wishlist_item.product.get_url}}">
+                                        <i class="fa fa-search"
                                             style="margin-left: 80px; margin-right: 40px; background-color: antiquewhite; color: brown;">
                                         </i>
                                     </a>
