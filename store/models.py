@@ -3,7 +3,9 @@ from django.utils.text import slugify
 from category.models import Category
 from django.utils.html import mark_safe
 from django.urls import reverse
+
 from math import ceil
+from model_clone import CloneMixin
 
 # Create your models here.
 class ProductBrand(models.Model):
@@ -79,7 +81,7 @@ class ProductSize(models.Model):
         verbose_name = 'Product Size'
         verbose_name_plural = 'Product Sizes'
 
-class Variation(models.Model):
+class Variation(CloneMixin, models.Model):
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE, null=True, blank=True)
     product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE, null=True, blank=True)
     variation_category = models.ForeignKey(ProductVariationCategory, on_delete=models.CASCADE, null=True, blank=True)
@@ -105,7 +107,7 @@ class Product(Variation):
     product_name = models.CharField(max_length=200)
     size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, null=True, blank=True)
     color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)
-    sku = models.CharField(max_length=100, unique=True, editable=False, null=True, blank=True)
+    sku = models.CharField(max_length=100, editable=False, null=True, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     price = models.IntegerField()
@@ -120,7 +122,8 @@ class Product(Variation):
     tags = models.ManyToManyField(ProductTags, related_name='products', blank=True)
     
 
-
+    
+    
     class Meta:
         """This class is used to set the default ordering of the products"""
         ordering = ['-created_date']
@@ -140,13 +143,13 @@ class Product(Variation):
         return reverse("product_detail", args=[self.category.slug, self.slug])
     
     def save(self, *args, **kwargs):
-        if not self.sku:
-            sku_parts = [self.brand.name[:3], self.category.category_name[:3], self.variation_category.name[:3]]
-            product_name_slug = slugify(self.product_name)
-            self.sku = f'{product_name_slug}-{self.pk}-{"-".join(sku_parts)}'
-
+        """This function is used to generate the sku and slug of the product"""
         if self.discount > 0:
             self.discount_price = ceil(self.price - (self.price * (self.discount / 100)))
+
+        sku_parts = [self.brand.name[:3], self.category.category_name[:3], self.variation_category.name[:3], 'size-' ,self.size.name]
+        product_name_slug = slugify(self.product_name)
+        self.sku = f'{product_name_slug}-{"-".join(sku_parts)}'
 
         self.description =  str(self.color.color_name) + ' ' + str(self.brand.name) + ' ' + str(self.product_name) + ' ' + str(self.category.category_name) + ' for men'
         super().save(*args, **kwargs)

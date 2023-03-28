@@ -29,7 +29,7 @@ def store(request, category_slug=None):
     else:
         products = Product.objects.all().filter(is_available=True).order_by('id')
         categories = Category.objects.all()
-        product_count = products.count()
+        product_count = len(products)
         
         
         paginator = Paginator(products, items_per_page)
@@ -62,13 +62,17 @@ def product_detail(request, category_slug, product_slug):
         single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
         # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
         
-        sizes = single_product.size.values_list('name', flat=True).order_by('-name') # get the list of sizes
-        try:
-            sizes = [int(size) for size in sizes if size != ''] # remove the empty string from the sizes list
-            sizes.sort() # sort the sizes list
-            sizes = [str(size) for size in sizes] # convert the sizes list to string
-        except:
-            sizes = [size for size in sizes if size != ''] # remove the empty string from the sizes list
+        # Get all products with the same name but different sizes
+        products_with_same_name = Product.objects.filter(product_name=single_product.product_name)
+        
+        print(f"\n\n\nproducts_with_same_name: {products_with_same_name}\n\n\n")
+        
+        # Get a list of unique sizes from the products with the same name
+        sizes = [str(i.size) for i in products_with_same_name]
+        sizes = [int(i) for i in sizes]
+        sizes.sort()
+        
+        print(f"\n\n\nSizes: {sizes}\n\n\n")
         
         tags = single_product.tags.values_list('name', flat=True).order_by('-name')
 

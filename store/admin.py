@@ -1,17 +1,20 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
 from store.models import Product, ProductBrand, ProductType, ProductTags, ProductColor, ProductVariationCategory, ProductSize
+from model_clone import CloneModelAdmin
+
 # Register your models here.
 
 # STEP 45: make admin class for the product model and register it
-class ProductAdmin(admin.ModelAdmin):
+
+class ProductAdmin(CloneModelAdmin):
     model = Product
 
-    list_display = ['brand', 'product_name', 'category', 'color_preview', 'price', 'discount', 'discount_price', 'stock', "modified_date", 'img_preview', "is_available"]
+    list_display = ['brand', 'product_name', 'category', 'color_preview', 'size', 'price', 'discount', 'discount_price', 'stock', "modified_date", 'img_preview', "is_available"]
     readonly_fields = ['img_preview', "sku", "modified_date", "created_date", 'discount_price']
     list_filter = [ 'brand', 'category', 'is_available', "modified_date", "created_date"]
     prepopulated_fields = {'slug': ("product_name",)}
-    list_editable = ['is_available', "stock", 'discount']
+    list_editable = ['is_available', "stock", 'discount', 'size']
     list_display_links = ['brand', 'product_name']
 
     filter_horizontal = ['tags']
@@ -51,12 +54,6 @@ class ProductAdmin(admin.ModelAdmin):
     color_preview.allow_tags = True
     color_preview.short_description = 'Color Preview'
     
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj=obj, **kwargs)
-        form.product_variation_category_id = None
-        if obj:
-            form.product_variation_category_id = obj.variation_category_id
-        return form
 
 class ProductColorAdmin(admin.ModelAdmin):
     list_display = ('color_name', 'color_hex', 'color_preview')
