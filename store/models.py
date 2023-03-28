@@ -3,11 +3,12 @@ from django.utils.text import slugify
 from category.models import Category
 from django.utils.html import mark_safe
 from django.urls import reverse
+from math import ceil
 
 # Create your models here.
 class ProductBrand(models.Model):
     """This class is used to create the product brand model"""
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -19,7 +20,7 @@ class ProductBrand(models.Model):
 
 class ProductType(models.Model):
     """This class is used to create the product type model"""
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -30,7 +31,7 @@ class ProductType(models.Model):
         verbose_name_plural = 'Product Types'
 
 class ProductTags(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     
 
@@ -103,11 +104,13 @@ class Product(Variation):
     """This class is used to create the product model"""
     product_name = models.CharField(max_length=200)
     size = models.ManyToManyField(ProductSize, related_name='products', blank=True)
-    color = models.ManyToManyField(ProductColor, related_name='products', blank=True)
+    color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, null=True, blank=True)
     sku = models.CharField(max_length=100, unique=True, editable=False, null=True, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.IntegerField()
+    discount = models.IntegerField(default=0, blank=True, null=True)
+    discount_price = models.IntegerField(default=0, blank=True, null=True)
     images = models.ImageField(upload_to='photos/products')
     stock = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -138,10 +141,16 @@ class Product(Variation):
     
     def save(self, *args, **kwargs):
         if not self.sku:
-            # generate sku based on product name, category, and variation category
             sku_parts = [self.brand.name[:3], self.category.category_name[:3], self.variation_category.name[:3]]
             product_name_slug = slugify(self.product_name)
             self.sku = f'{product_name_slug}-{self.pk}-{"-".join(sku_parts)}'
+        if not self.description:
+            self.description =  str(self.color.color_name) + ' ' + str(self.brand.name) + ' ' + str(self.product_name) + ' ' + str(self.category.category_name) + ' for men'
+        if self.discount > 0:
+            self.discount_price = ceil(self.price - (self.price * (self.discount / 100)))
         super().save(*args, **kwargs)
+    
+    def get_color_hex(self):
+        return self.color.color_hex
 
     # STEP 44: register the product model in the admin.py file of the store

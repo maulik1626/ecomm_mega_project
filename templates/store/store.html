@@ -246,7 +246,8 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6>{{product.product_name}} abc</h6>
+                                    
+                                    <h6><b>{{product.brand}} </b>{{product.product_name}}</h6>
                                     {% if product.stock <= 0 %} <a href="#" class="add-cart">! Out of Stock</a>
                                         {% else %}
                                         <a href="{% url 'soft_add_to_cart' product.id %}" class="add-cart">+ Add To
@@ -259,13 +260,15 @@
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
                                         </div>
+                                        {% if product.discount > 0 %}
+                                        <h5>Rs. {{product.discount_price}}</h5>
+                                        {% else %}
                                         <h5>Rs. {{product.price}}</h5>
+                                        {% endif %}
                                         <div class="product__color__select">
-                                            {% for color in colors %}
-                                            <label for="pc-4" style="background: {{ color.color_hex }};">
-                                                <input type="radio" id="pc-4" name="{{ color.color_name }}" value="{{ color.color_name }}">
+                                            <label for="pc-1" style="background: {{product.get_color_hex}};">
+                                                <input type="radio" id="pc-1" style="border: 1px black solid;">
                                             </label>
-                                            {% endfor %}
                                         </div>
                                 </div>
                             </div>
@@ -287,7 +290,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6>{{product.product_name}}</h6>
+                                    <h6><b>{{product.brand}} </b>{{product.product_name}}</h6>
                                     {% if product.stock <= 0 %} <a href="#" class="add-cart">! Out of Stock</a>
                                         {% else %}
                                         <a href="{% url 'soft_add_to_cart' product.id %}" class="add-cart">+ Add To
@@ -300,13 +303,15 @@
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>
                                         </div>
+                                        {% if product.discount > 0 %}
+                                        <h5>Rs. {{product.discount_price}}</h5>
+                                        {% else %}
                                         <h5>Rs. {{product.price}}</h5>
+                                        {% endif %}
                                         <div class="product__color__select">
-                                            {% for color in colors %}
-                                            <label for="pc-4" style="background: {{ color.color_hex }};">
-                                                <input type="radio" id="pc-4" name="{{ color.color_name }}" value="{{ color.color_name }}">
+                                            <label for="pc-1" style="background: {{product.get_color_hex}};">
+                                                <input type="radio" id="pc-1">
                                             </label>
-                                            {% endfor %}
                                         </div>
                                 </div>
                             </div>

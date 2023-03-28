@@ -105,7 +105,11 @@
                     {% endif %}
                     </div>
                     <div class="product__details__text">
-                        <h4>{{single_product.product_name}}</h4>
+                        
+                        <h4><b>{{single_product.brand.name}}</b> {{single_product.product_name}}</h4>
+                        <div class="container">
+                            <span>Color : <b style="font-style: italic;">{{product_color}} </b></span>
+                        </div>
                         <div class="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -114,7 +118,12 @@
                             <i class="fa fa-star-o"></i>
                             <span> - 5 Reviews</span>
                         </div>
-                        <h3>Rs. {{single_product.price}} <span>1700.00</span></h3>
+                        {% if single_product.discount > 0 %}
+                        <span class="badge badge-pill badge-success" style="margin-bottom: 20px; width: 20%; font-size: 15px;">{{single_product.discount}}% off</span>
+                        <h3>Rs. {{single_product.discount_price}} <span>{{single_product.price}}</span></h3>
+                        {% else %}
+                        <h3>Rs. {{single_product.price}} </h3>
+                        {% endif %}
                         <p><b>{{single_product.description}}</b> is a lorem ipsum dolor sit amet consectetur,
                             adipisicing elit. Magnam voluptatum repudiandae sequi? Doloribus quos sequi repellendus
                             error nobis optio, dolores quae itaque sunt sed labore?</p>
@@ -131,18 +140,6 @@
                                     </label>
                                     {% endfor %}
                                 </div>
-                                <div class="product__details__option__color">
-                                    <span>Color:</span>
-                                    {% for color in colors %}
-                                    <label for="sp-1" style="background: {{ color.color_hex }};">
-                                        <input type="radio" id="sp-1" name="{{ color.color_name }}"
-                                            value="{{ color.color_hex }}">
-                                    </label>
-                                    {% endfor %}
-
-                                </div>
-
-
                             </div>
                             <div class="product__details__cart__option">
                                 {% if single_product.stock <= 0 %} <a href="#" class="primary-btn"

@@ -43,11 +43,6 @@ def store(request, category_slug=None):
     wishlist = Wishlist.objects.get(wishlist_id=wishlist)
     wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
-
-    colors = products.values('color__color_name', 'color__color_hex').order_by('-color__color_name').distinct()
-    
-    for color in colors:
-        print(f"\n\n\ncolors : {list(colors)}\n\n\n")
     
     context = {
         "products": page_items,
@@ -72,11 +67,8 @@ def product_detail(request, category_slug, product_slug):
         sizes.sort() # sort the sizes list
         sizes = [str(size) for size in sizes] # convert the sizes list to string
         
-        colors = single_product.color.values('color_name', 'color_hex').order_by('-color_name')
-
         tags = single_product.tags.values_list('name', flat=True).order_by('-name')
 
-        print(colors)
         session_id = request.session.session_key
         if not session_id:
             session_id = request.session.create()
@@ -106,13 +98,18 @@ def product_detail(request, category_slug, product_slug):
         # TODO: Display related products in the product detail page
     except Exception as e:
         raise e
+    
+    product_color = str(single_product.color)
+    product_color = [i for i in product_color if i.isalpha()]
+    product_color = ''.join(product_color)
+    
     context = {
         "single_product" : single_product,
         "cart_item" : cart_item,
         "wishlist_item" : wishlist_item,
         "sizes" : sizes,
-        "colors" : colors,
         "tags" : tags,
+        "product_color" : product_color,
     }
     return render(request, "store/product_detail.html", context=context)
 
