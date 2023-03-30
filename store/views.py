@@ -103,7 +103,7 @@ def product_detail(request, category_slug, product_slug, color_id):
             pass
         
         try:
-            cart_item = CartItem.objects.get(product=products, cart=cart)        
+            cart_item = CartItem.objects.filter(product=products, cart=cart)        
         except CartItem.DoesNotExist:
             pass
         

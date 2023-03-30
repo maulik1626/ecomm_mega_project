@@ -32,7 +32,10 @@ class CartItem(models.Model):
         
     
     def sub_total(self):
-        return self.product.price * self.quantity
+        if self.product.discount_price:
+            return self.product.discount_price * self.quantity
+        else:
+            return self.product.price * self.quantity
     
     # def img_preview(self):
     #     return self.product.image.url.split("/")[-1]
