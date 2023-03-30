@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from store.models import Product
+from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages as msgs
@@ -19,7 +19,7 @@ def _cart_id(request):
 
 def add_to_cart(request, product_id):
     """Add a quantity of the specified product to the cart."""
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     
     try:
         cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
@@ -63,7 +63,7 @@ def soft_add_to_cart(request, product_id):
         print(f"\n\n\ncolor : {color}\nsize : {size}\n\n\n")
 
         print(f"\n\n\ncolor : {color}\nsize : {size}\n\n\n")
-        product = Product.objects.get(id=product_id)
+        product = Variation.objects.get(id=product_id)
 
         try:
             cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
@@ -101,7 +101,7 @@ def soft_add_to_cart(request, product_id):
         return redirect(previous_url)
     except:
         print(f"\n\n\nStage 1.1\n\n\n")
-        product = Product.objects.get(id=product_id)
+        product = Variation.objects.get(id=product_id)
         print(f"\n\n\nStage 2.1\n\n\n")
 
         try:
@@ -152,7 +152,7 @@ def soft_add_to_cart(request, product_id):
 
 def increase_in_cart(request, product_id, size):
     print(f"\n\n\n{size}\n\n\n")
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     
     wishlist_item = WishlistItem.objects.filter(product=product, wishlist__wishlist_id=_cart_id(request))
     wishlist_item.delete()
@@ -223,7 +223,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
 
 def reduce_from_cart(request, product_id, size):
     """Reduce the quantity of the specified product to the cart."""
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     cart = Cart.objects.get(cart_id=_cart_id(request))
     cart_item = CartItem.objects.get(product=product, cart=cart, size=size)
     product_name = cart_item.product.product_name
@@ -240,7 +240,7 @@ def reduce_from_cart(request, product_id, size):
 
 def delete_from_cart(request, product_id, size):
     """Delete the specified product from the cart."""    
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     cart = Cart.objects.get(cart_id=_cart_id(request))
     cart_item = CartItem.objects.get(product=product, cart=cart, size=size)
     cart_item.delete()

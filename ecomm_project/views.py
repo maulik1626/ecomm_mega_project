@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from random import shuffle
-from store.models import Product
+from store.models import Product, Variation
 from category.models import Category
 from wishlists.models import Wishlist, WishlistItem
 
@@ -13,13 +13,21 @@ from wishlists.models import Wishlist, WishlistItem
 # STEP 48: show the products in the home page
 def home(request):
     # documentaion: https://docs.djangoproject.com/en/3.2/ref/models/querysets/
-    products = Product.objects.filter(is_available=True).order_by("-created_date")
+    all_products = Variation.objects.all().filter(is_available=True)
+
+    products = []
+    check_list = []
+    for i in all_products:
+        product = f"{i.product.product_name} {i.color}"
+        if product in check_list:
+            pass
+        else:
+            products.append(i)
+            check_list.append(product)
+    
     print(products)
     
     categories = Category.objects.all()
-    
-    products = list(products)
-    shuffle(products)
     
     wishlist = request.session.session_key
     if not wishlist:

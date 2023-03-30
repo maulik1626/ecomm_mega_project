@@ -73,14 +73,23 @@
                             <tr>
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <a href="{{wishlist_item.product.get_url}}" style="color: black;"><img src="{{wishlist_item.product.images.url}}" alt="" width="100px"></a>
+                                        <a href="{{wishlist_item.product.get_url}}" style="color: black;"><img src="{{wishlist_item.product.images.url}}" alt="" width="120px"></a>
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{wishlist_item.product.brand.name}}</a></h5>
+                                        <h5 style="font-weight: 900;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{wishlist_item.product.product.brand.name}}</a></h5>
                                         <h6 style="padding-right: 10px; font-weight: 300;"><a href="{{wishlist_item.product.get_url}}" style="color: black;">{{wishlist_item.product.product_name}}</a></h6>
+                                        <p style="margin: 0;"><b>Color : </b>{{wishlist_item.product.color}}</p>
+                                        {% if wishlist_item.product.discount > 0 %}
+                                        <p style="margin: 0;"><b>Original Price : </b>{{wishlist_item.product.price}}</p>
+                                        <p style="margin: 0;color: red;"><b>Discount : </b>{{wishlist_item.product.discount}}% off</p>
+                                        {% endif %}
                                     </div>
                                 </td>
+                                {% if wishlist_item.product.discount > 0 %}
+                                <td class="cart__price">Rs. {{wishlist_item.product.discount_price}}</td>
+                                {% else %}
                                 <td class="cart__price">Rs. {{wishlist_item.product.price}}</td>
+                                {% endif %}
                                 <td class="cart__close">
 
                                     <a href="{{wishlist_item.product.get_url}}">

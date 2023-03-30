@@ -120,7 +120,7 @@
         <div class="row product__filter">
             {% for product in products %}
             {% if product.product_name in wishlist_items %}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.category}}">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.product.category.category_name}}">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="{{product.images.url}}">
                         <!-- <span class="label">New</span> -->
@@ -163,7 +163,7 @@
                 </div>
             </div>
             {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.category}}">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix {{product.product.category.category_name}}">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="{{product.images.url}}">
                         <!-- <span class="label">New</span> -->
@@ -193,14 +193,8 @@
                         </div>
                         <h5>Rs. {{product.price}}</h5>
                         <div class="product__color__select">
-                            <label for="pc-1">
-                                <input type="radio" id="pc-1">
-                            </label>
-                            <label class="active black" for="pc-2">
-                                <input type="radio" id="pc-2">
-                            </label>
-                            <label class="grey" for="pc-3">
-                                <input type="radio" id="pc-3">
+                            <label for="pc-1" style="background: {{product.color.color_hex}};">
+                                <input type="radio" id="pc-1" style="border: 1px black solid;">
                             </label>
                         </div>
                     </div>

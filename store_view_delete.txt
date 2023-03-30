@@ -1,0 +1,55 @@
+
+def store(request, category_slug=None):
+    """This function is used to show the products in the store page. If the category slug is not None, then it will show the products of that category. If the category slug is None, then it will show all the products. It will also show the categories in the store page. It will also show the number of products in the store page."""
+    categories = None
+    products = None
+    items_per_page=12
+    
+    if category_slug != None:
+        categories = get_object_or_404(Category, slug=category_slug)
+        all_products = Product.objects.filter(category=categories, is_available=True).order_by('id')
+        
+        products = Variation.objects.filter(product__in=products)
+        product_count = products.count()
+        
+        variations = Variation.objects.filter(product__in=products)
+        print(variations)
+        
+        paginator = Paginator(products, items_per_page)
+        page = request.GET.get('page')
+        page_items = paginator.get_page(page) 
+    else:
+        products = Product.objects.all().filter(is_available=True).order_by('id')
+        categories = Category.objects.all()
+        
+        variations = Variation.objects.filter(product__in=products)
+        
+        colors = ProductColor.objects.annotate(num_variants=Count('variation', distinct=True)).filter(num_variants__gt=0)
+        
+        product_count = len(products)
+        
+        paginator = Paginator(variations, items_per_page)
+        page = request.GET.get('page')
+        page_items = paginator.get_page(page) 
+    
+    wishlist = request.session.session_key
+    if not wishlist:
+        wishlist = request.session.create()
+    
+    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+    wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
+    
+    for i in variations:
+        print(f"\n\n\n{i.product.product_name, i.size, i.color, i.price, i.id}\n\n\n")
+    
+    context = {
+        "products": page_items,
+        "categories": categories,
+        "product_count": product_count,
+        "title": "Store",
+        "wishlist_items" : wishlist_items,
+        "variations": variations,
+    }
+    
+    return render(request, "store/store.html", context=context)

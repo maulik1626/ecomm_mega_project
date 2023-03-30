@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages as msgs
 from wishlists.models import Wishlist, WishlistItem
 from django.core.exceptions import ObjectDoesNotExist
-from store.models import Product
+from store.models import Product, Variation
 from store.views import store
 # from carts.views import add_to_cart
 
@@ -35,7 +35,7 @@ def wishlist(request, wishlist_items=None):
     return render(request, "wishlists/wishlist.html", context=context)
 
 def add_to_wishlist(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     try:
         wishlist = Wishlist.objects.get(wishlist_id=_wishlist_id(request))
     except Wishlist.DoesNotExist:
@@ -45,7 +45,7 @@ def add_to_wishlist(request, product_id):
     wishlist.save()
     
     try:
-        wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist)
+        wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist, brand=product.product.brand)
         product_name = wishlist_item.product.product_name
         product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
     
@@ -54,6 +54,7 @@ def add_to_wishlist(request, product_id):
         wishlist_item = WishlistItem.objects.create(
             product=product,
             wishlist=wishlist,
+            brand=product.product.brand,
         )
         wishlist_item.save()
         product_name = wishlist_item.product.product_name
@@ -66,7 +67,7 @@ def add_to_wishlist(request, product_id):
 
 def remove_from_wishlist(request, product_id):
     wishlist = Wishlist.objects.get(wishlist_id = _wishlist_id(request))
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(Variation, id=product_id)
     wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist)
     wishlist_item.delete()
     wishlist.save()
@@ -93,7 +94,7 @@ def remove_from_wishlist(request, product_id):
 
 def soft_remove_from_wishlist(request, product_id):
     wishlist = Wishlist.objects.get(wishlist_id=_wishlist_id(request))
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(Variation, id=product_id)
     wishlist_item = WishlistItem.objects.get(product=product, wishlist=wishlist)
     wishlist_item.delete()
     wishlist.save()
@@ -110,7 +111,7 @@ def soft_remove_from_wishlist(request, product_id):
     return redirect(previous_url)
 
 def soft_add_to_wishlist(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = Variation.objects.get(id=product_id)
     try:
         wishlist = Wishlist.objects.get(wishlist_id=_wishlist_id(request))
     except Wishlist.DoesNotExist:

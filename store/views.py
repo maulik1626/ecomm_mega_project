@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from store.models import Product
+from django.db.models import Count
+from django.http import HttpResponse
+from store.models import Product, Variation, ProductColor
 from category.models import Category
 from wishlists.models import Wishlist, WishlistItem
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -12,69 +14,84 @@ from carts.models import Cart, CartItem
 # STEP 54: go to store/templates/store/store.html and make the store page
 # STEP 55: go to store/urls.py file and give categories url using slug
 # STEP 56: make a context_processor for the categories to be available accross project. Make a file named category/context_processors.py
+
+
+def _sort_sizes(sizes: list) -> list:
+    """This function is used to sort the sizes. It will sort the sizes in the order of XS, S, M, L, XL, XXL."""
+    try:
+        return sorted(sizes, key=lambda x: ['XXXS', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'].index(x))
+    except:
+        return sorted([int(i) for i in sizes])
+
+
 def store(request, category_slug=None):
     """This function is used to show the products in the store page. If the category slug is not None, then it will show the products of that category. If the category slug is None, then it will show all the products. It will also show the categories in the store page. It will also show the number of products in the store page."""
     categories = None
     products = None
-    items_per_page=3
+    items_per_page = 6
+    # TODO: Add pagination to the store page
+    # TODO: Add search functionality to the store page
+    # TODO: Add sorting functionality to the store page
+    # TODO: Add filtering functionality to the store page
     
     if category_slug != None:
         categories = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(category=categories, is_available=True).order_by('id')
-        product_count = products.count()
-        
-        paginator = Paginator(products, items_per_page)
-        page = request.GET.get('page')
-        page_items = paginator.get_page(page) 
+        all_products = Variation.objects.filter(product__category=categories, is_available=True)
     else:
-        products = Product.objects.all().filter(is_available=True).order_by('id')
-        categories = Category.objects.all()
-        product_count = len(products)
-        
-        
-        paginator = Paginator(products, items_per_page)
-        page = request.GET.get('page')
-        page_items = paginator.get_page(page) 
+        all_products = Variation.objects.all().filter(is_available=True)
+        # variations = Variation.objects.all().filter(is_available=True)
+
+    products = []
+    check_list = []
+    for i in all_products:
+        product = f"{i.product.product_name} {i.color}"
+        if product in check_list:
+            pass
+        else:
+            products.append(i)
+            check_list.append(product)
+    
+    all_products_count = len(products)
+    
+    paginator = Paginator(products, items_per_page)
+    page = request.GET.get('page')
+    page_items = paginator.get_page(page) 
     
     wishlist = request.session.session_key
     if not wishlist:
         wishlist = request.session.create()
     
     wishlist = Wishlist.objects.get(wishlist_id=wishlist)
-    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)    
+    wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
     
+    
     context = {
-        "products": page_items,
-        "categories": categories,
-        "product_count": product_count,
         "title": "Store",
-        "wishlist_items" : wishlist_items,
+        'products' : page_items,
+        "wishlist_items": wishlist_items,
+        "product_count": all_products_count,
     }
     
     return render(request, "store/store.html", context=context)
 
 # STEP 62: make a product_detail function to render the product_detail page and bring in all the product details to the product_detail page
-def product_detail(request, category_slug, product_slug):
+def product_detail(request, category_slug, product_slug, color_id):
     cart_item = None
     wishlist_item = None
     try:
-        single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
+        products = Variation.objects.filter(product__category__slug = category_slug, product__slug = product_slug, color_id = color_id, is_available=True).first()
         # TODO: if the product is in the cart, show the add to cart button as Add one more, quantity as cartitem_quantity and disable the quantity input, and show the remove from cart button
         
-        # Get all products with the same name but different sizes
-        products_with_same_name = Product.objects.filter(product_name=single_product.product_name)
-        
-        print(f"\n\n\nproducts_with_same_name: {products_with_same_name}\n\n\n")
-        
         # Get a list of unique sizes from the products with the same name
-        sizes = [str(i.size) for i in products_with_same_name]
-        sizes = [int(i) for i in sizes]
-        sizes.sort()
+        variations = Variation.objects.filter(product__category__slug = category_slug, product__slug = product_slug, color_id = color_id, is_available=True)
         
-        print(f"\n\n\nSizes: {sizes}\n\n\n")
+        print("\n\n\nI am here")
+        print(f"\n\n\n{products}\n\n\n")
+        print(f"\n\n\n{variations}\n\n\n")
         
-        tags = single_product.tags.values_list('name', flat=True).order_by('-name')
+        # tags = single_product.tags.values_list('name', flat=True).order_by('-name')
+        # print(f"\n\n\n{tags}\n\n\n")
 
         session_id = request.session.session_key
         if not session_id:
@@ -86,7 +103,7 @@ def product_detail(request, category_slug, product_slug):
             pass
         
         try:
-            cart_item = CartItem.objects.get(product=single_product, cart=cart, size=single_product.size)        
+            cart_item = CartItem.objects.get(product=products, cart=cart)        
         except CartItem.DoesNotExist:
             pass
         
@@ -96,7 +113,7 @@ def product_detail(request, category_slug, product_slug):
             pass
         
         try:
-            wishlist_item = WishlistItem.objects.get(product=single_product, wishlist=wishlist)        
+            wishlist_item = WishlistItem.objects.get(product=products, wishlist=wishlist)        
         except WishlistItem.DoesNotExist:
             pass
 
@@ -106,19 +123,54 @@ def product_detail(request, category_slug, product_slug):
     except Exception as e:
         raise e
     
-    product_color = str(single_product.color)
-    product_color = [i for i in product_color if i.isalpha()]
-    product_color = ''.join(product_color)
+    product_colors = [i.color for i in variations]
+    
+    print(f"\n\n\n{product_colors}\n\n\n")
+    # print(f"\n\n\n{sizes}\n\n\n")
+    
+    # get the list of sizes using values_list
+    try:
+        sizes = [int(i.size) for i in variations]
+    except:
+        sizes = [str(i.size) for i in variations]
+        
+    sorted_sizes = _sort_sizes(sizes)
+    
+    print("sortedSizes")
+    print(f"{products}")
+    print(f"\n\n\n{sorted_sizes}\n\n\n")
+    
+    unique_colors = list(set(product_colors))
     
     context = {
-        "single_product" : single_product,
+        "title": "Product Detail",
+        "single_product" : products,
         "cart_item" : cart_item,
         "wishlist_item" : wishlist_item,
-        "sizes" : sizes,
-        "tags" : tags,
-        "product_color" : product_color,
+        "sizes" : sorted_sizes,
+        # "tags" : tags,
+        "product_colors" : unique_colors,
+        "variations" : variations,
+
     }
     return render(request, "store/product_detail.html", context=context)
+
+def soft_get_product_by_color(request, category_slug, product_slug, color_id):
+    
+    try:
+        single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
+        variant_product = Variation.objects.get(product=single_product, color=color_id)
+
+        print(f"\n\n\n{variant_product}\n\n\n")
+    except Exception as e:
+        raise e
+        
+    
+    if request.method == "POST":
+        
+        color = get_object_or_404(ProductColor, id=color_id)
+        print(f"\n\n\n{color}\n\n\n")
+    return HttpResponse(f"product_slug: color: {color}")
 
 #TODO: make a function that notify the user if the product is back in stock if the user has subscribed to the product's in stock notification
 
@@ -161,3 +213,6 @@ def search(request):
     print(context)
     
     return render(request, "store/store.html", context=context)
+
+
+

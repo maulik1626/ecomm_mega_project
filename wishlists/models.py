@@ -1,5 +1,5 @@
 from django.db import models
-from store.models import Product
+from store.models import Variation, ProductBrand
 
 
 class Wishlist(models.Model):
@@ -16,7 +16,8 @@ class Wishlist(models.Model):
         return self.wishlist_id
 
 class WishlistItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Variation, on_delete=models.CASCADE)
     wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     
@@ -27,3 +28,7 @@ class WishlistItem(models.Model):
     
     def __str__(self) -> str:
         return self.product.product_name
+    
+    def save(self, *args, **kwargs) -> None:
+        self.brand = self.product.product.brand
+        return super().save(*args, **kwargs)

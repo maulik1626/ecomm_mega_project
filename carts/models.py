@@ -1,5 +1,5 @@
 from django.db import models
-from store.models import Product
+from store.models import Variation
 
 # Create your models here.
 class Cart(models.Model):
@@ -19,7 +19,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     """This model is used to store the product, cart, quantity and the status of the cart item."""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Variation, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     size = models.CharField(max_length=200)

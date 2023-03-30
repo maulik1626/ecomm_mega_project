@@ -37,3 +37,18 @@ django.setup()
 #         tag.save()
 #     except:
 #         print(f' {i} \t Tag already exists')
+
+
+
+from store.models import ProductSize, ProductVariationCategory
+
+sizes = ["S", "M", "L", "XL", "XXL"]
+
+pvc = ProductVariationCategory.objects.all()
+
+print(pvc[0])
+
+for i in sizes:
+    obj = ProductSize.objects.create(name=i, product_variation_category=pvc[0])
+
+print("done")
