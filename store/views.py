@@ -41,15 +41,7 @@ def store(request, category_slug=None):
         all_products = Variation.objects.all().filter(is_available=True)
         # variations = Variation.objects.all().filter(is_available=True)
 
-    products = []
-    check_list = []
-    for i in all_products:
-        product = f"{i.product.product_name} {i.color}"
-        if product in check_list:
-            pass
-        else:
-            products.append(i)
-            check_list.append(product)
+    products = _product_by_color(all_products)
     
     all_products_count = len(products)
     
@@ -74,6 +66,18 @@ def store(request, category_slug=None):
     }
     
     return render(request, "store/store.html", context=context)
+
+def _product_by_color(all_products):
+    products = []
+    check_list = []
+    for i in all_products:
+        product = f"{i.product.product_name} {i.color}"
+        if product in check_list:
+            pass
+        else:
+            products.append(i)
+            check_list.append(product)
+    return products
 
 # STEP 62: make a product_detail function to render the product_detail page and bring in all the product details to the product_detail page
 def product_detail(request, category_slug, product_slug, color_id):
@@ -155,23 +159,6 @@ def product_detail(request, category_slug, product_slug, color_id):
     }
     return render(request, "store/product_detail.html", context=context)
 
-def soft_get_product_by_color(request, category_slug, product_slug, color_id):
-    
-    try:
-        single_product = Product.objects.get(category__slug = category_slug, slug = product_slug)
-        variant_product = Variation.objects.get(product=single_product, color=color_id)
-
-        print(f"\n\n\n{variant_product}\n\n\n")
-    except Exception as e:
-        raise e
-        
-    
-    if request.method == "POST":
-        
-        color = get_object_or_404(ProductColor, id=color_id)
-        print(f"\n\n\n{color}\n\n\n")
-    return HttpResponse(f"product_slug: color: {color}")
-
 #TODO: make a function that notify the user if the product is back in stock if the user has subscribed to the product's in stock notification
 
 def search(request):
@@ -180,22 +167,28 @@ def search(request):
     if 'keyword' in request.GET:
         keyword = request.GET["keyword"]
         if keyword:
-            products = Product.objects.order_by("-created_date").filter(
-                Q(description__icontains=keyword) | Q(product_name__icontains=keyword) | Q(category__category_name__icontains=keyword)
+            
+            all_products = Variation.objects.order_by("-created_date").filter(
+                Q(description__icontains=keyword) | Q(product_name__icontains=keyword) | Q(product__category__category_name__icontains=keyword) | Q(product__product_name__icontains=keyword) | Q(color__color_name__icontains=keyword)
+                , is_available=True
             )
-            product_count = products.count()
+
+            products = _product_by_color(all_products)
+            
+            print(f"\n\n\n{products}\n\n\n")
+            
+            product_count = len(products)
 
             if product_count < 1:
                 product_not_found = True
                 context["product_not_found"] = product_not_found
             
-            no_keyword = True
         else:
-            products = Product.objects.order_by('-created_date').filter(is_available=True)
-            no_keyword = False
-            product_count = products.count()
-        wishlist = request.session.session_key
-
+            all_products = Variation.objects.order_by('-created_date').filter(is_available=True)
+            
+            products = _product_by_color(all_products)
+            
+            product_count = len(products)
 
     wishlist = request.session.session_key
     if not wishlist:
@@ -209,6 +202,7 @@ def search(request):
     context["products"] = products
     context["product_count"] = product_count
     context["wishlist_items"] = wishlist_items
+    context["keyword"] = keyword
     
     print(context)
     
