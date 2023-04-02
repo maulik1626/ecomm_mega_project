@@ -27,10 +27,11 @@
             <form action="#">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form action="{% url 'register' %}" method="post" name="register">
+                        <form action="{% url 'register' %}" method="POST" name="register">
+                            {% csrf_token %}
+
                             <h6 class="checkout__title">Registration Details</h6>
                             <br>
-                            {% csrf_token %}
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
@@ -77,10 +78,10 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <center>
-                                        <button type="submit" class="site-btn col-lg-4">Register</button>
+                                        <button type="submit" class="site-btn col-lg-4" name="register">Register</button>
                                         <br><br>
-                                        <p>Already have an account? <a style="color: blue;"
-                                                href="{% url 'login' %}">Sign In here</a></p>
+                                        <!-- <p>Already have an account? <a style="color: blue;"
+                                                href="{% url 'login' %}">Sign In here</a></p> -->
                                     </center>
                                 </div>
                             </div>

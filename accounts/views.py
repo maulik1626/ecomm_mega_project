@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from accounts.forms import RegistrationForm
 from accounts.models import Account
 
@@ -6,11 +6,11 @@ def register(request):
     """This function is used to register the user."""
     print("\n\nEnter Register Function\n\n")
 
-    if request.method == "POST":
+    if request.method == 'POST':
         
         print("\n\nEnter IF Block\n\n")
         
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST) # This is the form that is submitted by the user.
         print("\n\nForm Received\n\n")
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
@@ -31,6 +31,8 @@ def register(request):
                 password = password,
             )
             print("\n\n\nUser saved successfully.\n\n\n")
+            
+            return redirect("login")
     else:
         
         print("\n\nEnter Else Block\n\n")
