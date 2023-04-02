@@ -130,7 +130,8 @@
                                 </td>
                                 <td class="cart__close">
                                     <a
-                                        href="{% url 'delete_from_cart' product_id=cart_item.product.id size=cart_item.size %}">
+                                        href="{% url 'delete_from_cart' product_id=cart_item.product.id size=cart_item.size %}"
+                                        onclick="return confirm('Are you sure you want to delete \'{{cart_item.product.product_name}}\' from cart?')">
                                         <i class="fa fa-close"></i></a>
                                 </td>
                             </tr>

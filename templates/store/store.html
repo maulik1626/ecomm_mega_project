@@ -231,89 +231,89 @@
                     </div>
                     <div class="row">
                         {% for product in products %}
-                        {% if product.product_name in wishlist_items %}
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
-                                    <ul class="product__hover">
-                                        <li><a href="{% url 'soft_remove_from_wishlist' product.id %}"><img
-                                                    src="{% static 'img/icon/heart-red.png' %}" alt=""></a></li>
-                                        <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
-                                                <span>Compare</span></a>
-                                        </li>
-                                        <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
-                                                    alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
+                            {% if product.product_name in wishlist_items %}
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
+                                            <ul class="product__hover">
+                                                <li><a href="{% url 'soft_remove_from_wishlist' product.id %}"><img
+                                                            src="{% static 'img/icon/heart-red.png' %}" alt=""></a></li>
+                                                <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
+                                                        <span>Compare</span></a>
+                                                </li>
+                                                <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
+                                                            alt=""></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="product__item__text">
 
-                                    <h6><b>{{product.brand}} </b>{{product.product_name}}</h6>
-                                    <a href="{% url 'soft_remove_from_wishlist' product.id %}" class="add-cart">-
-                                        Remove From Wishlist</a>
-                                    <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                    {% if product.discount > 0 %}
-                                    <h5>Rs. {{product.discount_price}}</h5>
-                                    {% else %}
-                                    <h5>Rs. {{product.price}}</h5>
-                                    {% endif %}
-                                    <div class="product__color__select">
-                                        <label for="pc-1" style="background: {{product.get_color_hex}};">
-                                            <input type="radio" id="pc-1" style="border: 1px black solid;">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
-                                    <ul class="product__hover">
-                                        <li><a href="{% url 'add_to_wishlist' product_id=product.id %}"><img
-                                                    src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
-                                        <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
-                                                <span>Compare</span></a>
-                                        </li>
-                                        <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
-                                                    alt=""></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><b>{{product.product.brand}} </b>{{product.product_name}}</h6>
-                                    <a href="{% url 'add_to_wishlist' product_id=product.id %}" class="add-cart">+ Add
-                                        To
-                                        Wishlist</a>
-                                    <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                    {% if product.discount > 0 %}
-                                    <span style="padding-right: 8px; font-size: 13px; color: grey;"><s>Rs.
-                                            {{product.price}}</s></span><span
-                                        style="font-size: 10px; color: red;">{{product.discount}}% off</span>
-                                    <h5>Rs. {{product.discount_price}}</h5>
-                                    {% else %}
-                                    <h5>Rs. {{product.price}}</h5>
-                                    {% endif %}
-                                    <div class="product__color__select">
-                                        <label for="pc-1" style="background: {{product.color.color_hex}};">
-                                            <input type="radio" id="pc-1" style="border: 1px black solid;">
-                                        </label>
+                                            <h6><b>{{product.product.brand}} </b>{{product.product_name}}</h6>
+                                            <a href="{% url 'soft_remove_from_wishlist' product.id %}" class="add-cart">-
+                                                Remove From Wishlist</a>
+                                            <div class="rating">
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                            {% if product.discount > 0 %}
+                                            <h5>Rs. {{product.discount_price}}</h5>
+                                            {% else %}
+                                            <h5>Rs. {{product.price}}</h5>
+                                            {% endif %}
+                                            <div class="product__color__select">
+                                                <label for="pc-1" style="background: {{product.get_color_hex}};">
+                                                    <input type="radio" id="pc-1" style="border: 1px black solid;">
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% endfor %}
+                            {% else %}
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="product__item">
+                                        <div class="product__item__pic set-bg" data-setbg="{{ product.images.url }}">
+                                            <ul class="product__hover">
+                                                <li><a href="{% url 'add_to_wishlist' product_id=product.id %}"><img
+                                                            src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                                <li><a href="#"><img src="{% static 'img/icon/compare.png' %}" alt="">
+                                                        <span>Compare</span></a>
+                                                </li>
+                                                <li><a href="{{product.get_url}}"><img src="{% static 'img/icon/search.png' %}"
+                                                            alt=""></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="product__item__text">
+                                            <h6><b>{{product.product.brand}} </b>{{product.product_name}}</h6>
+                                            <a href="{% url 'add_to_wishlist' product_id=product.id %}" class="add-cart">+ Add
+                                                To
+                                                Wishlist</a>
+                                            <div class="rating">
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                            {% if product.discount > 0 %}
+                                            <span style="padding-right: 8px; font-size: 13px; color: grey;"><s>Rs.
+                                                    {{product.price}}</s></span><span
+                                                style="font-size: 10px; color: red;">{{product.discount}}% off</span>
+                                            <h5>Rs. {{product.discount_price}}</h5>
+                                            {% else %}
+                                            <h5>Rs. {{product.price}}</h5>
+                                            {% endif %}
+                                            <div class="product__color__select">
+                                                <label for="pc-1" style="background: {{product.color.color_hex}};">
+                                                    <input type="radio" id="pc-1" style="border: 1px black solid;">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}    
                         <!-- <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
                             <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
@@ -764,18 +764,10 @@
                     </div>
                 </div>
                 {% endif %}
-
-
-
             </div>
         </div>
     </div>
 </section>
 <!-- Shop Section End -->
-
-<center>
-    <h2>{{search_result}}</h2>
-    <h2>{{product_count}}</h2>
-</center>
 
 {% endblock content %}
