@@ -151,3 +151,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # STEP 40: Go to urls.py file and add the media url configuration
 # STEP 41: Go to category/admin.py file and add CategoryAdmin class
+
+
+# SMTP Email configurations
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "rajamaulik9@gmail.com"
+EMAIL_HOST_PASSWORD = "ndbsfcflwiybfyjt"
