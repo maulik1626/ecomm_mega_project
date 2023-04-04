@@ -53,7 +53,10 @@ def store(request, category_slug=None):
     if not wishlist_id:
         wishlist_id = request.session.create()
     
-    wishlist = Wishlist.objects.get(wishlist_id=wishlist_id)
+    try:
+        wishlist = Wishlist.objects.get(wishlist_id=wishlist_id)
+    except Wishlist.DoesNotExist:
+        wishlist = Wishlist.objects.create(wishlist_id=wishlist_id)
     wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
     

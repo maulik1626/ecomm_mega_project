@@ -20,6 +20,7 @@ class RegistrationForm(forms.ModelForm):
         self.fields["email"].widget.attrs["placeholder"] = "Email Address"
         for field in self.fields:
             self.fields[field].widget.attrs["required"] = True
+            self.fields[field].widget.attrs["style"] = "color: black;"
     
     def clean(self):
         cleaned_data = super(RegistrationForm, self).clean()
@@ -35,12 +36,12 @@ class RegistrationForm(forms.ModelForm):
                 )
                 
         # Validate password strength using a regex pattern
-        regex_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@._$])[A-Za-z\d@._$]{8,}$'
-        password_validator = RegexValidator(
-            regex=regex_pattern,
-            message="Password must be at least 8 characters long, with at least one uppercase letter, one number, and one of the following special characters: '@' or '.' or '_' or '$'"
-        )
-        password_validator(password)
+        # regex_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@._$])[A-Za-z\d@._$]{8,}$'
+        # password_validator = RegexValidator(
+        #     regex=regex_pattern,
+        #     message="Password must be at least 8 characters long, with at least one uppercase letter, one number, and one of the following special characters: '@' or '.' or '_' or '$'"
+        # )
+        # password_validator(password)
         
         # Validate password and confirm password match
         if password != confirm_password:
