@@ -86,7 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ecomm_project.wsgi.application"
 
-# STEP 34: reguster the customUserModel here
+# STEP 34: register the customUserModel here
 AUTH_USER_MODEL = 'accounts.Account'
 # STEP 35: Go to admin.py file and register it
 
@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # STEP 39: add media configurations for the images
-# MEIDA CONFIGURATIONS
+# MEDIA CONFIGURATIONS
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 # STEP 40: Go to urls.py file and add the media url configuration

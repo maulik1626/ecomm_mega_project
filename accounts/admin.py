@@ -12,6 +12,8 @@ class AccountAdmin(UserAdmin):
     readonly_fields = ('date_joined', 'last_login')
     ordering = ('-date_joined',)
     list_filter = ('is_admin', 'is_staff', 'is_active', 'is_superuser')
+        
+    
     
 
 

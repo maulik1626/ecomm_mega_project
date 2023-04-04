@@ -82,23 +82,7 @@
       <div class="row d-flex justify-content-center">
         <div class="col-lg-8">
           <div class="product__details__text">
-            {% if messages %}
-            {% for message in messages %}
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-              {{ message }}
-            </div>
-            {% elif message.tags == 'info' %}
-            <div class="alert alert-info" role="alert">
-              {{ message }}
-            </div>
-            {% elif message.tags == 'warning' %}
-            <div class="alert alert-warning" role="alert">
-              {{ message }}
-            </div>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
+            {% include 'messages/messages.html' %}
           </div>
           <div class="product__details__text">
 
@@ -138,18 +122,18 @@
                 </div>
               </div>
               <div class="product__details__cart__option">
-                  <button type="submit" class="primary-btn">add to
-                    cart</button>
+                <button type="submit" class="primary-btn">add to
+                  cart</button>
               </div>
               <div class="product__details__btns__option">
-                  {% if wishlist_item %}
-                  <a href="{% url 'soft_remove_from_wishlist' single_product.id %}"><i class="fa fa-heart"
-                      style="color: red;"></i> remove from wishlist</a>
-                  {% else %}
-                  <a href="{% url 'soft_add_to_wishlist' single_product.id %}"><i class="fa fa-heart-o"></i> add to
-                    wishlist</a>
-                  {% endif %}
-                  <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                {% if wishlist_item %}
+                <a href="{% url 'soft_remove_from_wishlist' single_product.id %}"><i class="fa fa-heart"
+                    style="color: red;"></i> remove from wishlist</a>
+                {% else %}
+                <a href="{% url 'soft_add_to_wishlist' single_product.id %}"><i class="fa fa-heart-o"></i> add to
+                  wishlist</a>
+                {% endif %}
+                <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
               </div>
             </form>
 

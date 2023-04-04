@@ -44,9 +44,9 @@ def add_to_cart(request, product_id):
     product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
     
     if cart_item.quantity > 1:
-        msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
+        msgs.info(request, f" {product_name} of size {cart_item.size} quantity is updated to {cart_item.quantity}.")
     else:
-        msgs.info(request, f" {product_name} is added to cart.")
+        msgs.info(request, f" {product_name} of size {cart_item.size}  is added to cart.")
     
     
     
@@ -54,104 +54,44 @@ def add_to_cart(request, product_id):
 
 def soft_add_to_cart(request, product_id):
     """Add a quantity of the specified product to the cart."""
+    print(f"\n\n\nTry in soft_add_to_cart\n\n\n")
+    product = Variation.objects.get(id=product_id)
     try:
-        print(f"\n\n\nStage 1\n\n\n")
-        color = request.GET.get('color')
-        print(f"\n\n\nStage 2\n\n\n")
-        size = request.GET.get('size')
-        print(f"\n\n\nStage 3\n\n\n")
-        print(f"\n\n\ncolor : {color}\nsize : {size}\n\n\n")
-
-        print(f"\n\n\ncolor : {color}\nsize : {size}\n\n\n")
-        product = Variation.objects.get(id=product_id)
-
-        try:
-            cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
-        except Cart.DoesNotExist:
-            cart = Cart.objects.create(
-                cart_id=_cart_id(request)
-            )
-        cart.save()
-
-        try:
-            cart_item = CartItem.objects.get(product=product, cart=cart, size=request.GET.get('size'))        # check if the product is already in the cart using the product_id and cart_id and size
-            cart_item.quantity += 1
-            cart_item.save()
-        except CartItem.DoesNotExist:
-            cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
-                product=product,                # and add the product to the cart
-                cart=cart,                      # and set the cart_id to the cart_id present in the session
-                size=request.GET.get('size'),                     # and set the quantity to inpuut quantity
-            )
+        cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(
+            cart_id=_cart_id(request)
+        )
+    cart.save()
+    try:
+        cart_item = CartItem.objects.get(product=product, cart=cart, size=request.GET.get('size'))        # check if the product is already in the cart using the product_id and cart_id and size
+        cart_item.quantity += 1
         cart_item.save()
+    except CartItem.DoesNotExist:
+        cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
+            product=product,                # and add the product to the cart
+            cart=cart,                      # and set the cart_id to the cart_id present in the session
+            quantity=1,                     # and set the quantity to 1
+            size=request.GET.get('size'),                     # and set the quantity to inpuut quantity
+        )
+    cart_item.save()
 
-        product_name = cart_item.product.product_name
-        product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
+    product_name = cart_item.product.product_name
+    product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
 
-        if cart_item.quantity > 1:
-            msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
-        else:
-            msgs.success(request, f" {product_name} is added to cart.")
+    if cart_item.quantity > 1:
+        msgs.info(request, f" {product_name} of size {cart_item.size} quantity is updated to {cart_item.quantity}.")
+    else:
+        msgs.success(request, f" {product_name} of size {cart_item.size} is added to cart.")
 
-        previous_url = request.META.get('HTTP_REFERER')
-        request.session['previous_url'] = previous_url
+    previous_url = request.META.get('HTTP_REFERER')
+    request.session['previous_url'] = previous_url
 
-        print(f"\n\n\nprevious_url: {previous_url}\n\n\n")
 
-        return redirect(previous_url)
-    except:
-        print(f"\n\n\nStage 1.1\n\n\n")
-        product = Variation.objects.get(id=product_id)
-        print(f"\n\n\nStage 2.1\n\n\n")
-
-        try:
-            print(f"\n\n\nStage 3.1\n\n\n")
-            cart = Cart.objects.get(cart_id=_cart_id(request))    # get the cart using the cart_id present in the session
-            print(f"\n\n\nStage 4.1\n\n\n")
-        except Cart.DoesNotExist:
-            print(f"\n\n\nStage 5.1\n\n\n")
-            cart = Cart.objects.create(
-                cart_id=_cart_id(request)
-            )
-            print(f"\n\n\nStage 6.1\n\n\n")
-        cart.save()
-        print(f"\n\n\nStage 7.1\n\n\n")
-
-        try:
-            print(f"\n\n\nStage 8.1\n\n\n")
-            cart_item = CartItem.objects.get(product=product, cart=cart, size=request.GET.get('size'))        # check if the product is already in the cart using the product_id and cart_id 
-            print(f"\n\n\nStage 9.1\n\n\n")
-            cart_item.quantity += 1
-            print(f"\n\n\nStage 10.1\n\n\n")
-        except CartItem.DoesNotExist:
-            print(f"\n\n\nStage 11.1\n\n\n")
-            cart_item = CartItem.objects.create(        # if the product is not in the cart, then create a new cart_item
-                product=product,                # and add the product to the cart
-                cart=cart,                      # and set the cart_id to the cart_id present in the session
-                size = request.GET.get('size'),
-                quantity=1,                     # and set the quantity to 1
-            )
-            print(f"\n\n\nStage 12.1\n\n\n")
-        cart_item.save()
-        print(f"\n\n\nStage 13.1\n\n\n")
-
-        product_name = cart_item.product.product_name
-        product_name = product_name[:20] + "..." if len(product_name) > 20 else product_name
-
-        if cart_item.quantity > 1:
-            msgs.info(request, f" {product_name}'s quantity is updated to {cart_item.quantity}.")
-        else:
-            msgs.success(request, f" {product_name} is added to cart.")
-
-        previous_url = request.META.get('HTTP_REFERER')
-        request.session['previous_url'] = previous_url
-
-        print(f"\n\n\nprevious_url: {previous_url}\n\n\n")
-
-        return redirect(previous_url)
-
+    return redirect(previous_url)
+    
+    
 def increase_in_cart(request, product_id, size):
-    print(f"\n\n\n{size}\n\n\n")
     product = Variation.objects.get(id=product_id)
     
     wishlist_item = WishlistItem.objects.filter(product=product, wishlist__wishlist_id=_cart_id(request))
@@ -259,7 +199,6 @@ def delete_from_cart(request, product_id, size):
 def cart_to_wishlist(request, product_id, size):
     """Move the specified product from the cart to the wishlist."""
     
-    print(f"\n\n\n{size}\n\n\n")
     
     # removing from cart
     delete_from_cart(request, product_id, size)

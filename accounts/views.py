@@ -1,17 +1,12 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages as msgs
 from accounts.forms import RegistrationForm
 from accounts.models import Account
 
 def register(request):
     """This function is used to register the user."""
-    print("\n\nEnter Register Function\n\n")
-
     if request.method == 'POST':
-        
-        print("\n\nEnter IF Block\n\n")
-        
         form = RegistrationForm(request.POST) # This is the form that is submitted by the user.
-        print("\n\nForm Received\n\n")
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
@@ -19,33 +14,31 @@ def register(request):
             phone = form.cleaned_data["phone"]
             password = form.cleaned_data["password"]
 
-            print("\n\nForm Validated\n\n")
-            
+            # Set username based on email and phone number
+            username = email.split("@")[0]
+            if Account.objects.filter(username=username).exists():
+                username = username + '_' + str(phone)[-3:]
+                if Account.objects.filter(username=username).exists():
+                    username = username + '_' + str(phone)[-3:] + str(phone)[5:7]
+
             user = Account.objects.create_user(
                 # first_name, last_name, username, email, phone, password
                 first_name = first_name,
                 last_name = last_name,
                 email = email,
                 phone = phone,
-                username = email.split("@")[0],
+                username = username,
                 password = password,
             )
-            print("\n\n\nUser saved successfully.\n\n\n")
-            
+            user.phone = phone
+            user.save()
+            msgs.success(request, "Account created successfully.π")
             return redirect("login")
     else:
-        
-        print("\n\nEnter Else Block\n\n")
-        
         form = RegistrationForm()
-
-
     context = {
         "form": form,
     }
-    
-    print("\n\nEnd Function\n\n")
-    
     return render(request, "accounts/register.html", context=context)
 
 def login(request):

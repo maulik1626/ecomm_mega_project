@@ -49,11 +49,11 @@ def store(request, category_slug=None):
     page = request.GET.get('page')
     page_items = paginator.get_page(page) 
     
-    wishlist = request.session.session_key
-    if not wishlist:
-        wishlist = request.session.create()
+    wishlist_id = request.session.session_key
+    if not wishlist_id:
+        wishlist_id = request.session.create()
     
-    wishlist = Wishlist.objects.get(wishlist_id=wishlist)
+    wishlist = Wishlist.objects.get(wishlist_id=wishlist_id)
     wishlist_items = WishlistItem.objects.filter(wishlist=wishlist, is_active=True)
     wishlist_items = [wishlist_item.product.product_name for wishlist_item in wishlist_items]
     
@@ -104,7 +104,7 @@ def product_detail(request, category_slug, product_slug, color_id):
         try:
             cart = Cart.objects.get(cart_id=session_id)
         except Cart.DoesNotExist:
-            pass
+            cart = Cart.objects.create(cart_id=session_id)
         
         try:
             cart_item = CartItem.objects.filter(product=products, cart=cart)        
