@@ -81,15 +81,15 @@
                     </div>
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
-                            {% if user.id is not None %}
-                            <div class="header__top__links">
-                                <a href="#">{{user.first_name}}  {{user.last_name}} <i class="fa fa-user-circle-o"></i></a>
-                                <a href="{% url 'logout' %}">Sign out</a>
-                            </div>
-                            {% else %}
+                            {% if user.id is None %}
                             <div class="header__top__links">
                                 <a href="{% url 'login' %}">Sign in</a>
                                 <a href="#">FAQs</a>
+                            </div>
+                            {% else %}
+                            <div class="header__top__links">
+                                <a href="#">{{user.first_name}}  {{user.last_name}} <i class="fa fa-user-circle-o"></i></a>
+                                <a href="{% url 'logout' %}">Sign out</a>
                             </div>
                             {% endif %}
                         </div>
