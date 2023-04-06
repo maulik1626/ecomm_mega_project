@@ -17,8 +17,11 @@ class Wishlist(models.Model):
 
 class WishlistItem(models.Model):
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE, null=True)
+
     product = models.ForeignKey(Variation, on_delete=models.CASCADE)
+
     wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
+    
     is_active = models.BooleanField(default=True)
     
     class Meta:

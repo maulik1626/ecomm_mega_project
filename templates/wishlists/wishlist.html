@@ -22,24 +22,32 @@
 </section>
 <!-- Breadcrumb Section End -->
 
+{% if wishlist_empty %}
+<div class="col-lg-12">
+    <div class="cart__total__procced">
+        <center>
+            <div class="row" style="margin: 40px 0px;">
+                <div class="col-lg-12">
+                    <center>
+                        <div class="container">
+                            {% include 'messages/messages.html' %}
+                        </div>
+                    </center>
+                </div>
+            </div>
+            <h1 style="margin-top: 90px; margin-bottom: 60px;">{{wishlist_empty_message}}</h1>
+            <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;" class="primary-btn">Continue
+                Shopping</a>
+        </center>
+    </div>
+</div>
+{% else %}
 <!-- Wishlist Section Begin -->
 <section class="shopping-cart spad">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 {% include 'messages/messages.html' %}
-                {% if wishlist_empty %}
-                <div class="col-lg-12">
-                    <div class="cart__total__procced">
-                        <center>
-                            <h1 style="margin-top: 90px; margin-bottom: 60px;">{{wishlist_empty_message}}</h1>
-                            <a href="{% url 'store' %}" style="margin-top: 40px; margin-bottom: 60px;"
-                                class="primary-btn">Continue Shopping</a>
-                        </center>
-                    </div>
-                </div>
-
-                {% else %}
 
                 <div class="shopping__cart__table">
                     <p>{{wishlist_items_len}} product(s) found</p>

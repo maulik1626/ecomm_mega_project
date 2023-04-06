@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Check Out</h4>
+                    <div class="breadcrumb__links">
+                        <a href="{% url 'home' %}">Home</a>
+                        <a href="{% url 'store' %}">Store</a>
+                        <span>Check Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <form action="#" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <h6>
+                            {% include 'messages/messages.html' %}
+                        </h6>
+                        <h6 class="checkout__title">Billing Details</h6>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    <input type="text"  name="first_name" >
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    <input type="text"  name="last_name" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input type="text"  name="phone" >
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    <input type="text" name="email" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Address<span>*</span></p>
+                            <input type="text" placeholder="Street Address" class="checkout__input__add" name="address_1" >
+                            <input type="text" placeholder="Apartment, suite, unite ect (optinal)" name="address_2">
+                        </div>
+                        <div class="checkout__input">
+                            <p>Town/City<span>*</span></p>
+                            <input type="text" name="city" >
+                        </div>
+                        <div class="checkout__input">
+                            <p>State<span>*</span></p>
+                            <input type="text" name="state" >
+                        </div>
+                        <div class="checkout__input">
+                            <p>Postcode / ZIP<span>*</span></p>
+                            <input type="text" name="postal_code" >
+                        </div>
+                        <div class="checkout__input__checkbox">
+                            <label for="diff-acc">
+                                Note about your order, e.g, special notes for delivery
+                                <input type="checkbox" id="diff-acc">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Order notes<span>*</span></p>
+                            <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="order_notes">
+                        </div>
+                        <div class="checkout__input__checkbox">
+                            <label for="acc">
+                                Create an account?
+                                <input type="checkbox" id="acc" name="create_account">
+                                <span class="checkmark"></span>
+                            </label>
+                            <p>Create an account by entering the information below. If you are a returning customer
+                                please login at the top of the page</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Password<span>*</span></p>
+                                    <input type="password" name="password">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Confirm Password<span>*</span></p>
+                                    <input type="password" name="confirm_password">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                            <ul class="checkout__total__products">
+                                {% for cart_item in cart_items %}
+                                <li style="margin-bottom: 0;"><b> {% if forloop.counter > 9 %} {{forloop.counter}}. {% else %}  0{{forloop.counter}}. {% endif %} {{cart_item.product.product_name|slice:":15"}}... <span>Rs. {{cart_item.sub_total}}</span></b></li>
+                                <li style="margin-top: 0; margin-bottom: 0;">Brand: {% if cart_item.product.product.brand.name|length < 10 %} {{cart_item.product.product.brand.name}} {% else %} {{cart_item.product.product.brand.name|slice:":10"}}... {% endif %}<span>Color: {{cart_item.product.color}}</span></li>
+                                <li style="margin-top: 0; margin-bottom: 0;">Size: {{cart_item.size}}<span>Quantity: {{cart_item.quantity}}</span></li>
+                                <br>
+                                {% endfor %}
+                            </ul>
+                            <ul class="checkout__total__all">
+                                <li>Subtotal <span>Rs. {{total}}</span></li>
+                                <li>Tax <span>Rs. {{tax}}</span></li>
+                                <li>Total <span>Rs. {{grand_total}}</span></li>
+                            </ul>
+                            <button type="submit" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+
+{% endblock content %}

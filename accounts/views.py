@@ -6,6 +6,9 @@ from django.contrib import auth
 from accounts.forms import RegistrationForm
 from accounts.models import Account
 from django.contrib.auth.hashers import check_password
+from carts.views import _cart_id
+from carts.models import Cart, CartItem
+
 # from django.contrib.auth.decorators import user_passes_test
 
 # verify email
@@ -84,14 +87,18 @@ def login(request):
             if user.is_active == False:
                 return redirect(f"/accounts/login/?command=verification&email={email}&is_active={user.is_active}_verification_pending_{urlsafe_base64_encode(force_bytes(user.pk))}")
             else:
-                print(f"Email: {email}")
-                print(f"Password: {password}\n\n\n")
-
                 user = auth.authenticate(email=email, password=password)
-
-                print(f"\n\n\n User: {user}\n\n\n")
-
                 if user is not None:
+                    try:
+                        cart = Cart.objects.get(cart_id=_cart_id(request))
+                        cart_items_extsts = CartItem.objects.filter(cart=cart).exists()
+                        if cart_items_extsts:
+                            cart_items = CartItem.objects.filter(cart=cart)
+                            for i in cart_items:
+                                i.user = user
+                                i.save()
+                    except:
+                        pass
                     auth.login(request, user)
                     msgs.success(request, "You have successfully logged in.")
                     return redirect("store")
@@ -204,7 +211,6 @@ def reset_password(request):
                 elif password == confirm_password:
                     user.set_password(password)
                     user.save()
-                    del request.session['uid']
                     msgs.success(request, "Password reset successful.")
                     return redirect("login")
                 else:

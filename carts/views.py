@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
@@ -131,12 +132,10 @@ def increase_in_cart(request, product_id, size):
     
 
 def cart(request, total=0, quantity=0, cart_items=None):
+    context = {}
     try:
-        print(f"\n\n\nStep 1\n\n\n")
         cart = Cart.objects.get(cart_id=_cart_id(request))
-        print(f"\n\n\nStep 2\n\n\n")
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-        print(f"\n\n\nStep 3\n\n\n")
         for cart_item in cart_items:
             if cart_item.product.discount_price:
                 total += (cart_item.product.discount_price * cart_item.quantity)
@@ -145,24 +144,20 @@ def cart(request, total=0, quantity=0, cart_items=None):
             quantity += cart_item.quantity
         tax = (18 * total) / 100
         grand_total = total + tax
+        tax = round(tax, 2)
+        grand_total = round(grand_total, 2)
+        context = {
+            "total": total,
+            "quantity": quantity,
+            "cart_items": cart_items,
+            "tax": tax,
+            "grand_total": grand_total,
+        }   
     except Cart.DoesNotExist:
-        print(f"\n\n\nStep 4\n\n\n")
-        cart = Cart.objects.create(
-            cart_id=_cart_id(request)
-        )
-        print(f"\n\n\nStep 5\n\n\n")
-        cart.save()
-        return redirect("cart")
-        
-    print(f"\n\n\nStep 6\n\n\n")
+        cart = Cart.objects.create(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
     
-    context = {
-        "total": total,
-        "quantity": quantity,
-        "cart_items": cart_items,
-        "tax": tax,
-        "grand_total": grand_total,
-    }
+    
     
     if cart_items.count() == 0:
         cart_empty_message = "Your cart is empty."
@@ -228,16 +223,43 @@ def cart_to_wishlist(request, product_id, size):
 
 # TODO: make a function that notifies the user that the product is out of stock but in the cart
 
-
-
-# AJAX FUNCTIONS
-def check_cart_item(request):
-    product_id = request.GET.get('product_id')
-    size = request.GET.get('size')
-    product = get_object_or_404(Product, id=product_id)
+@login_required(login_url='login')
+def checkout(request, total=0, quantity=0, cart_items=None):
+    context = {}
     try:
-        cart_item = CartItem.objects.get(product=product, size=size)
-        in_cart = True
-    except CartItem.DoesNotExist:
-        in_cart = False
-    return JsonResponse({'in_cart': in_cart})
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        for cart_item in cart_items:
+            if cart_item.product.discount_price:
+                total += (cart_item.product.discount_price * cart_item.quantity)
+            else:
+                total += (cart_item.product.price * cart_item.quantity)
+            quantity += cart_item.quantity
+        tax = (18 * total) / 100
+        grand_total = total + tax
+        tax = round(tax, 2)
+        grand_total = round(grand_total, 2)
+        
+        context = {
+            "total": total,
+            "quantity": quantity,
+            "cart_items": cart_items,
+            "tax": tax,
+            "grand_total": grand_total,
+        }   
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+    
+    
+    
+    if cart_items.count() == 0:
+        cart_empty_message = "Your cart is empty."
+        context.update(
+            {
+                "cart_empty": True, 
+                "cart_empty_message": cart_empty_message,
+            }
+        )
+    
+    return render(request, "carts/checkout.html", context=context)
