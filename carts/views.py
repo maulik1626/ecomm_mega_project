@@ -132,8 +132,11 @@ def increase_in_cart(request, product_id, size):
 
 def cart(request, total=0, quantity=0, cart_items=None):
     try:
+        print(f"\n\n\nStep 1\n\n\n")
         cart = Cart.objects.get(cart_id=_cart_id(request))
+        print(f"\n\n\nStep 2\n\n\n")
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        print(f"\n\n\nStep 3\n\n\n")
         for cart_item in cart_items:
             if cart_item.product.discount_price:
                 total += (cart_item.product.discount_price * cart_item.quantity)
@@ -142,8 +145,16 @@ def cart(request, total=0, quantity=0, cart_items=None):
             quantity += cart_item.quantity
         tax = (18 * total) / 100
         grand_total = total + tax
-    except ObjectDoesNotExist:
-        pass
+    except Cart.DoesNotExist:
+        print(f"\n\n\nStep 4\n\n\n")
+        cart = Cart.objects.create(
+            cart_id=_cart_id(request)
+        )
+        print(f"\n\n\nStep 5\n\n\n")
+        cart.save()
+        return redirect("cart")
+        
+    print(f"\n\n\nStep 6\n\n\n")
     
     context = {
         "total": total,
