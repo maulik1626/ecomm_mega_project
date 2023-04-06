@@ -24,6 +24,24 @@
                 </div>
             </div>
 
+            {% elif request.GET.command == 'password_reset_link_sent' %}
+
+            <div class="col-md-12">
+                <div class="section-title">
+                    <center>
+                        <br><br><br><br>
+                        <h2>Password reset link sent on '{{request.GET.email}}'.</h2>
+                        <br>
+                        <h5>Check your <a href="http://mail.google.com/" style="color: blue;" target="_blank">email</a> for the password reset link.</h5>
+                        <br><br><br><br>
+                        <hr style="width: 250px; background-color: black;">
+                        <br>
+                        <p>Password already reset? <a style="color: blue;" href="{% url 'login' %}">Login here</a></p>
+                        <br><br><br><br>
+                    </center>
+                </div>
+            </div>
+
             {% else %}
 
             <div class="col-lg-6 col-md-6">
