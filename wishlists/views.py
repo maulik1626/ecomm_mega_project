@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages as msgs
 from wishlists.models import Wishlist, WishlistItem
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,6 +15,7 @@ def _wishlist_id(request):
         wishlist = request.session.create()
     return wishlist
 
+@login_required(login_url='login')
 def wishlist(request, wishlist_items=None):
     try:
         wishlist = Wishlist.objects.get(wishlist_id=_wishlist_id(request))
@@ -34,6 +36,7 @@ def wishlist(request, wishlist_items=None):
         
     return render(request, "wishlists/wishlist.html", context=context)
 
+@login_required(login_url='login')
 def add_to_wishlist(request, product_id):
     product = Variation.objects.get(id=product_id)
     try:
@@ -65,6 +68,7 @@ def add_to_wishlist(request, product_id):
     wishlist_item.save()
     return redirect(store)
 
+
 def remove_from_wishlist(request, product_id):
     wishlist = Wishlist.objects.get(wishlist_id = _wishlist_id(request))
     product = get_object_or_404(Variation, id=product_id)
@@ -92,6 +96,7 @@ def remove_from_wishlist(request, product_id):
     
     return redirect('wishlist')
 
+
 def soft_remove_from_wishlist(request, product_id):
     wishlist = Wishlist.objects.get(wishlist_id=_wishlist_id(request))
     product = get_object_or_404(Variation, id=product_id)
@@ -110,6 +115,7 @@ def soft_remove_from_wishlist(request, product_id):
     # Redirect the user to the wishlist page
     return redirect(previous_url)
 
+@login_required(login_url='login')
 def soft_add_to_wishlist(request, product_id):
     product = Variation.objects.get(id=product_id)
     try:

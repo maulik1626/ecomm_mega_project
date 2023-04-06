@@ -88,8 +88,8 @@
                             </div>
                             {% else %}
                             <div class="header__top__links">
-                                <a href="#">{{user.first_name}}  {{user.last_name}} <i class="fa fa-user-circle-o"></i></a>
-                                <a href="{% url 'logout' %}">Sign out</a>
+                                <a href="{% url 'dashboard' %}"> <i class="fa fa-user-circle-o"></i> {{user.first_name}}  {{user.last_name}}</a> 
+                                <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Sign out</a>
                             </div>
                             {% endif %}
                         </div>

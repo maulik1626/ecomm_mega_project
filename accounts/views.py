@@ -63,9 +63,9 @@ def register(request):
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
             
-            msgs.success(request, "Account created successfully.π")
-            
-            return redirect("login")
+            context={"email": email}
+             
+            return redirect(f'/accounts/login/?command=verification&email={email}&is_active={user.is_active}_verification_pending_{urlsafe_base64_encode(force_bytes(user.pk))}')
     else:
         form = RegistrationForm()
     context = {
@@ -78,21 +78,28 @@ def login(request):
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST["password"]
-        
-        print(f"Email: {email}")
-        print(f"Password: {password}\n\n\n")
-        
-        user = auth.authenticate(email=email, password=password)
-        
-        print(f"\n\n\n User: {user}\n\n\n")
-        
-        if user is not None:
-            auth.login(request, user)
-            msgs.success(request, "You have successfully logged in.")
-            return redirect("store")
-        else:
-            msgs.info(request, "Invalid credentials. Please try again.")
-            return redirect("login")
+        try:
+            user = Account.objects.get(email=email)
+            if user.is_active == False:
+                return redirect(f"/accounts/login/?command=verification&email={email}&is_active={user.is_active}_verification_pending_{urlsafe_base64_encode(force_bytes(user.pk))}")
+            else:
+                print(f"Email: {email}")
+                print(f"Password: {password}\n\n\n")
+
+                user = auth.authenticate(email=email, password=password)
+
+                print(f"\n\n\n User: {user}\n\n\n")
+
+                if user is not None:
+                    auth.login(request, user)
+                    msgs.success(request, "You have successfully logged in.")
+                    return redirect("store")
+                else:
+                    msgs.info(request, "Invalid credentials. Please try again.")
+                    return redirect(f"/accounts/login/?command=invalid_credentials&email={email}")
+        except Account.DoesNotExist:
+            msgs.info(request, "Register your account first.")
+            return redirect(f"/accounts/register/?command=user_not_found&email={email}")
     else:
         return render(request, "accounts/login.html")
 
@@ -120,3 +127,16 @@ def activate(request, uidb64, token):
         print("\n\n\nActivation link is invalid!\n\n\n")
         msgs.info(request, "Activation link is invalid!")
         return redirect("register")
+
+@login_required(login_url="login")
+def dashboard(request):
+    """This function is used to show the user dashboard."""
+    return render(request, "accounts/dashboard.html")
+
+def forgot_password(request):
+    """This function is used to send the forgot password link to the user."""
+    if request.method == "POST":
+        pass
+    
+    
+    return render(request, "accounts/forgot_password.html")

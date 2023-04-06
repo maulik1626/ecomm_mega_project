@@ -8,7 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 # STEP 38: go to settings.py file and add media configurations for the images
 class AccountAdmin(UserAdmin):
     model = Account
-    list_display = ('email', 'first_name', 'last_name', 'username', 'phone', 'date_joined', 'last_login', 'is_admin', 'is_staff')
+    list_display = ('email', 'first_name', 'last_name', 'username', 'phone', 'date_joined', 'last_login', 'is_admin', 'is_staff', 'is_active')
     readonly_fields = ('date_joined', 'last_login')
     ordering = ('-date_joined',)
     list_filter = ('is_admin', 'is_staff', 'is_active', 'is_superuser')
