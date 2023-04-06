@@ -5,14 +5,13 @@
 *.log
 *.pot
 *.pyc
-*.txt
-email_cred.py
 __pycache__/
+local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media
 
-local_settings.py
+email_cred.py
 delete_product_detail.txt
 learn.txt
 store_view_delete.txt
